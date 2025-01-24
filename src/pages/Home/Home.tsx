@@ -19,12 +19,12 @@ interface ClassData {
   room: string;
   status: string;
 }
-
+ 
 interface ClassItemProps {
   classes: ClassData[];
 }
 
-function ClassItem({ classes }: ClassItemProps) {
+function ClassItem ({ classes }: ClassItemProps) {
   return (
     <>
       {classes.map((classData) => (
