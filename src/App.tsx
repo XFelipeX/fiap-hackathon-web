@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import { db } from './services/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import AppRoutes from './routes/Routes'
 import Navbar from './components/sidebar/Sidebar';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <AppRoutes/>
     </>
   );
 }

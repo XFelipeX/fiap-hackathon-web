@@ -20,12 +20,14 @@ const navItems: NavItem[] = [
 ];
 
 const SidebarContainer = styled.div<{ isExpanded: boolean }>`
+  position: absolute;
   display: flex;
   flex-direction: column;
   background-color: #333c40;
   color: #ecf0f1;
   width: ${(props) => (props.isExpanded ? '250px' : '70px')};
   height: 100vh;
+  border-bottom-right-radius: 10px;
   overflow-x: hidden;
   transition: width 0.3s ease;
 `;
