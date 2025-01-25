@@ -4,6 +4,7 @@ import {
   TopContainer,
   Title,
   TestsButton,
+  TestsButtonAnchor,
   ContentContainer,
   ClassItemContainer,
   ClassItemContentContainer,
@@ -62,7 +63,9 @@ const Home: React.FC = () => {
       <MainContainer>
         <TopContainer>
           <Title>Aulas Hoje</Title>
-          <TestsButton>Provas</TestsButton>
+          <TestsButton>
+            <TestsButtonAnchor href="/timeline">Provas</TestsButtonAnchor>
+          </TestsButton>
         </TopContainer>
         <ContentContainer>
           <ClassItem classes={mockClasses}/>

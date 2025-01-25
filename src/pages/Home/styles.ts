@@ -29,6 +29,12 @@ export const TestsButton = styled.button`
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
+export const TestsButtonAnchor = styled.a`
+  color: white;
+  font-size: 16pt;
+  text-decoration: none;
+`;
+
 export const ContentContainer = styled.div`
   background-color: #333C40;
   padding: 40px 40px 5px 40px;
