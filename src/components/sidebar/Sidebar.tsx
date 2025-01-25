@@ -28,6 +28,7 @@ const SidebarContainer = styled.div<{ isExpanded: boolean }>`
   width: ${(props) => (props.isExpanded ? '250px' : '70px')};
   height: 100vh;
   border-bottom-right-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
   overflow-x: hidden;
   transition: width 0.3s ease;
 `;

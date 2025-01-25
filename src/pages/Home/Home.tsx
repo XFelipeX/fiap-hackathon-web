@@ -4,6 +4,7 @@ import {
   TopContainer,
   Title,
   TestsButton,
+  TestsButtonAnchor,
   ContentContainer,
   ClassItemContainer,
   ClassItemContentContainer,
@@ -19,12 +20,12 @@ interface ClassData {
   room: string;
   status: string;
 }
-
+ 
 interface ClassItemProps {
   classes: ClassData[];
 }
 
-function ClassItem({ classes }: ClassItemProps) {
+function ClassItem ({ classes }: ClassItemProps) {
   return (
     <>
       {classes.map((classData) => (
@@ -62,7 +63,9 @@ const Home: React.FC = () => {
       <MainContainer>
         <TopContainer>
           <Title>Aulas Hoje</Title>
-          <TestsButton>Provas</TestsButton>
+          <TestsButton>
+            <TestsButtonAnchor href="/timeline">Provas</TestsButtonAnchor>
+          </TestsButton>
         </TopContainer>
         <ContentContainer>
           <ClassItem classes={mockClasses}/>
