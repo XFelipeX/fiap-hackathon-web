@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const MainContent = styled.div`
   background-color: #1D2123;
   min-height: 100vh;
-  padding: 95px 20% 50px 20%;
+  padding: 95px 10% 50px 15%;
 
   @media (max-width: 1360px) {
     padding: 95px 5% 50px 10%;
@@ -49,7 +49,7 @@ export const TableRow = styled.tr`
 
 export const TableHeader = styled.th`
   color: white;
-  padding: 30px;
+  padding: 20px;
   font-weight: normal;
 
   @media (max-width: 1360px) {
@@ -59,7 +59,7 @@ export const TableHeader = styled.th`
 
 export const TableData = styled.td`
   color: white;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
   font-weight: normal;
 
