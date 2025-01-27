@@ -1,7 +1,10 @@
 import styled from 'styled-components'
+import { Colors } from "../../constants/Colors";
+
+const colors = Colors.dark;
 
 export const MainContent = styled.div`
-  background-color: #1D2123;
+  background-color: ${colors.background};
   min-height: 100vh;
   padding: 95px 10% 50px 15%;
 
@@ -11,19 +14,19 @@ export const MainContent = styled.div`
 `;
 
 export const Add = styled.button`
-  background-color: #ED145B;
+  background-color: ${colors.buttonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
   font-size: 15pt;
   padding: 10px 30px;
-  color: white;
+  color: ${colors.buttonText};
   cursor: pointer;
   margin-bottom: 40px;
 `;
 
 export const ContentContainer = styled.div`
-  background-color: #333C40;
+  background-color: ${colors.secondBackground};
   border-radius: 10px;
   min-width: 450px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -31,15 +34,15 @@ export const ContentContainer = styled.div`
 `;
 
 export const Table = styled.table`
-  color: white;
+  color: ${colors.text};
   width: 100%;
   border-collapse: collapse;
 `;
 
 export const TableRow = styled.tr`
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid ${colors.text};
   &:nth-child(even) {
-    background-color: #404E55;
+    background-color: ${colors.thirdBackground};
   }
   &:last-child {
     border: none;
@@ -48,7 +51,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHeader = styled.th`
-  color: white;
+  color: ${colors.text};
   padding: 20px;
   font-weight: normal;
 
@@ -58,7 +61,7 @@ export const TableHeader = styled.th`
 `;
 
 export const TableData = styled.td`
-  color: white;
+  color: ${colors.text};
   padding: 20px;
   text-align: center;
   font-weight: normal;
@@ -69,23 +72,23 @@ export const TableData = styled.td`
 `;
 
 export const EditButton = styled.button`
-  background-color: #0C8CE9;
+  background-color: ${colors.editButtonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
   font-size: 15pt;
   padding: 10px 30px;
-  color: white;
+  color: ${colors.buttonText};
   cursor: pointer;
 `;
 
 export const DeleteButton = styled.button`
-  background-color: #C22C2C;
+  background-color: ${colors.deleteButtonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
   font-size: 15pt;
   padding: 10px 30px;
-  color: white;
+  color: ${colors.buttonText};
   cursor: pointer;
 `;
