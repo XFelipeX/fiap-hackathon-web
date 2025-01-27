@@ -2,8 +2,7 @@ import './App.css';
 import React from 'react';
 import { db } from './services/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import AppRoutes from './routes/Routes'
-import Navbar from './components/sidebar/Sidebar';
+import AppRoutes from './routes/Routes';
 
 function App() {
   React.useEffect(() => {
@@ -26,8 +25,7 @@ function App() {
   }, []);
   return (
     <>
-      <Navbar />
-      <AppRoutes/>
+      <AppRoutes />
     </>
   );
 }
