@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaHome, FaUser, FaBars, FaClock, FaChild } from 'react-icons/fa';
+import {
+  FaHome,
+  FaUser,
+  FaBars,
+  FaClock,
+  FaChild,
+  FaSchool,
+} from 'react-icons/fa';
 import { FaNoteSticky, FaPerson } from 'react-icons/fa6';
-
+import { Button } from './styles';
+import { useNavigate } from 'react-router-dom';
 interface NavItem {
   id: number;
   label: string;
@@ -11,12 +19,32 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 1, label: 'Aulas hoje', icon: <FaHome />, path: '/' },
-  { id: 2, label: 'Planos de ensino', icon: <FaUser />, path: '/plan' },
-  { id: 3, label: 'Turmas', icon: <FaChild />, path: '/class' },
-  { id: 3, label: 'Cronogramas', icon: <FaClock />, path: '/timeline' },
-  { id: 3, label: 'Gestão de pessoas', icon: <FaPerson />, path: '/persons' },
-  { id: 3, label: 'Boletim', icon: <FaNoteSticky />, path: '/result' },
+  { id: 1, label: 'Aulas hoje', icon: <FaHome size={18} />, path: '/' },
+  {
+    id: 2,
+    label: 'Planos de ensino',
+    icon: <FaUser size={18} />,
+    path: '/plan',
+  },
+  { id: 3, label: 'Turmas', icon: <FaChild size={18} />, path: '/class' },
+  {
+    id: 3,
+    label: 'Cronogramas',
+    icon: <FaClock size={18} />,
+    path: '/timeline',
+  },
+  {
+    id: 3,
+    label: 'Gestão de pessoas',
+    icon: <FaPerson size={18} />,
+    path: '/persons',
+  },
+  {
+    id: 3,
+    label: 'Boletim',
+    icon: <FaNoteSticky size={18} />,
+    path: '/result',
+  },
 ];
 
 const SidebarContainer = styled.div<{ isExpanded: boolean }>`
@@ -35,7 +63,7 @@ const SidebarContainer = styled.div<{ isExpanded: boolean }>`
 
 const SidebarHeader = styled.div`
   display: flex;
-  align-items: center;
+  align-items: space-between;
   justify-content: space-between;
   padding: 15px;
 `;
@@ -79,9 +107,13 @@ const NavLabel = styled.span<{ isExpanded: boolean }>`
 `;
 
 const Sidebar: React.FC = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(
+    localStorage.getItem('isExpanded') === 'true',
+  );
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
+    localStorage.setItem('isExpanded', JSON.stringify(!isExpanded));
     setIsExpanded(!isExpanded);
   };
 
@@ -91,7 +123,7 @@ const Sidebar: React.FC = () => {
         <MenuToggle onClick={toggleSidebar}>
           <FaBars />
         </MenuToggle>
-        {isExpanded && <h1>Logo</h1>}
+        {/* {isExpanded && <h1>Logo</h1>} */}
       </SidebarHeader>
       <NavList>
         {navItems.map((item) => (
@@ -103,6 +135,9 @@ const Sidebar: React.FC = () => {
           </NavItem>
         ))}
       </NavList>
+      <Button onClick={() => navigate('/startclass')}>
+        {isExpanded ? 'Iniciar Aula' : <FaSchool size={18} />}
+      </Button>
     </SidebarContainer>
   );
 };
