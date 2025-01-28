@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup';
+import { db } from '../../services/firebase'
+import { collection, doc, getDoc, setDoc, updateDoc, addDoc } from "firebase/firestore"
 
 import {
   MainContainer,
@@ -15,7 +18,6 @@ import {
   SelectInput,
   SubmitButton
 } from './styles'
-import { useParams } from 'react-router-dom';
 
 interface FormValues {
   name: string
@@ -37,10 +39,84 @@ const validations = Yup.object({
 })
 
 const PlanForm: React.FC = () => {
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const [initialValues, setInitialValues] = useState<FormValues>({
+    name: '',
+    subjects: [],
+    duration: 1,
+    academicPeriod: '',
+  });
 
-  const initialValues: FormValues = { name: '', subjects: [], duration: 1, academicPeriod: '' };
+  useEffect(() => {
+    const fetchPlan = async () => {
+      if (id) {
+        const plansCollection = collection(db, 'plans')
+        const planDoc = doc(plansCollection, id)
+        const planSnapshot = await getDoc(planDoc)
+
+        if (planSnapshot.exists()) {
+          setInitialValues(planSnapshot.data() as FormValues)
+        }
+      }
+    }
+
+    fetchPlan()
+  }, [id])
+
+  const handleSave = (values: FormValues) => {
+    if (id) {
+      updatePlan(values)
+    } else {
+      createPlan(values)
+    }
+  }
+
+  const createPlan = async (plan: FormValues) => {
+    const plansCollection = collection(db, 'plans')
+    const counterDoc = doc(plansCollection, 'counter')
+
+    try {
+      const counterSnapshot = await getDoc(counterDoc)
   
+      let currentCounter = 0;
+      if (counterSnapshot.exists()) {
+        currentCounter = counterSnapshot.data().count
+      } else {
+  
+        await setDoc(counterDoc, { count: 0 })
+        console.log("Documento 'counter' criado com sucesso.")
+      }
+      const newCounter = currentCounter + 1
+  
+      await updateDoc(counterDoc, { count: newCounter })
+  
+      const newCode = `PE-${newCounter.toString().padStart(3, '0')}`
+      const planWithCode = { ...plan, code: newCode };
+  
+      await addDoc(plansCollection, planWithCode)
+      console.log('Plano adicionado com sucesso!')
+      navigate('/plan')
+    } catch (error) {
+      console.error('Erro ao adicionar plano:', error)
+    }
+  };
+
+  const updatePlan = async (values) => {
+    if (!id) return
+
+    const plansCollection = collection(db, 'plans')
+    const planDoc = doc(plansCollection, id)
+
+    try {
+      await updateDoc(planDoc, values);
+      console.log('Plano atualizado com sucesso!')
+      navigate('/plan')
+    } catch (error) {
+      console.error('Erro ao atualizar plano:', error)
+    }
+  }
+
   const subjects = [
     { value: "portuguese", label: "Português" },
     { value: "math", label: "Matemática" },
@@ -64,9 +140,7 @@ const PlanForm: React.FC = () => {
             initialValues={initialValues}
             enableReinitialize={true}
 					  validationSchema={validations}
-            onSubmit={(values) => {
-              console.log(values)
-            }}
+            onSubmit={(values) => handleSave(values)}
           >
             {({ values, handleChange, setFieldValue }) => (
               <Form>
@@ -96,8 +170,8 @@ const PlanForm: React.FC = () => {
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             const selectedSubjects = e.target.checked
                               ? [...values.subjects, subject.value]
-                              : values.subjects.filter((item) => item !== subject.value);
-                            setFieldValue("subjects", selectedSubjects);
+                              : values.subjects.filter((item) => item !== subject.value)
+                            setFieldValue("subjects", selectedSubjects)
                           }}
                         />
                         <CheckBoxLabel htmlFor={subject.value}>{subject.label}</CheckBoxLabel>
@@ -131,10 +205,10 @@ const PlanForm: React.FC = () => {
                     required
                   >
                     <option value="">Selecione um período</option>
-                    <option value="1_2025">1º Semestre 2025</option>
-                    <option value="2_2025">2º Semestre 2025</option>
-                    <option value="3_2025">3º Semestre 2025</option>
-                    <option value="4_2025">4º Semestre 2025</option>
+                    <option value="1_2025">1º Bimestre 2025</option>
+                    <option value="2_2025">2º Bimestre 2025</option>
+                    <option value="3_2025">3º Bimestre 2025</option>
+                    <option value="4_2025">4º Bimestre 2025</option>
                   </SelectInput>
                 </InputContainer>
 

@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { db } from '../../services/firebase';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+
 import {
   MainContent,
   Add,
   ContentContainer,
+  FeedBack,
   Table,
   TableRow,
   TableHeader,
@@ -14,7 +18,7 @@ import {
 
 
 interface PlanTable {
-  id: number
+  id: string
   code: string
   name: string
   subjects: string
@@ -27,7 +31,16 @@ interface PlanTableProps {
   navigate: (path: string) => void
 }
 
+interface Translations {
+  subjects: { [key: string]: string }
+  period: { [key: string]: string }
+}
+
 function PlanTable ({ plans, navigate }: PlanTableProps) {
+  if (plans.length === 0) {
+    return <FeedBack>Nenhum plano ainda.</FeedBack>
+  }
+
   return (
     <Table>
       <TableRow>
@@ -39,18 +52,18 @@ function PlanTable ({ plans, navigate }: PlanTableProps) {
         <TableHeader></TableHeader>
         <TableHeader></TableHeader>
       </TableRow>
-      {plans.map((plansData) => (
-        <TableRow key={plansData.id}>
-          <TableData>{plansData.code}</TableData>
-          <TableData>{plansData.name}</TableData>
-          <TableData>{plansData.subjects}</TableData>
-          <TableData>{plansData.duration}</TableData>
-          <TableData>{plansData.academicPeriod}</TableData>
+      {plans.map((plan) => (
+        <TableRow key={plan.id}>
+          <TableData>{plan.code}</TableData>
+          <TableData>{plan.name}</TableData>
+          <TableData>{plan.subjects}</TableData>
+          <TableData>{plan.duration}</TableData>
+          <TableData>{plan.academicPeriod}</TableData>
           <TableData>
-            <EditButton onClick={() => navigate(`/planForm/${plansData.id}`)}>Editar</EditButton>
+            <EditButton onClick={() => navigate(`/planForm/${plan.id}`)}>Editar</EditButton>
           </TableData>
           <TableData>
-            <DeleteButton onClick={() => handleDelete(plansData)}>Excluir</DeleteButton>
+            <DeleteButton onClick={() => handleDelete(plan)}>Excluir</DeleteButton>
           </TableData>
         </TableRow>
       ))}  
@@ -58,31 +71,88 @@ function PlanTable ({ plans, navigate }: PlanTableProps) {
   )
 }
 
-function handleDelete(plansData: PlanTable) {
-  if (!window.confirm(`Tem certeza que deseja excluir o plano ${plansData.name}?`)) {
-    console.log('Plano não excluído')
-    return false
+const handleDelete = async (plan: PlanTable) => {
+  if (window.confirm(`Tem certeza que deseja excluir o plano ${plan.name}?`)) {
+    try {
+      const plansCollection = collection(db, 'plans')
+      const planDoc = doc(plansCollection, plan.id)
+      await deleteDoc(planDoc);
+      alert(`${plan.name} excluído com sucesso!`)
 
+    } catch (error) {
+      console.error("Erro ao excluir plano:", error)
+      alert("Erro ao excluir plano. Tente novamente.")
+    }
   }
-  window.alert(`${plansData.name} excluído com sucesso!`)
 }
+
+const translations: Translations = {
+  subjects: {
+    portuguese: 'Português',
+    math: 'Matemática',
+    physics: 'Física',
+    chemistry: 'Química',
+    biology: 'Biologia',
+    history: 'História',
+    geography: 'Geografia',
+    philosophy: 'Filosofia',
+    sociology: 'Sociologia',
+    art: 'Arte',
+    physical_education: 'Educação Física',
+    english: 'Inglês',
+  },
+  period: {
+    '1_2025': '1º Bimestre 2025',
+    '2_2025': '2º Bimestre 2025',
+    '3_2025': '3º Bimestre 2025',
+    '4_2025': '4º Bimestre 2025',
+  }
+};
 
 const Plan: React.FC = () => {
   const navigate = useNavigate()
+  const [plans, setPlans] = useState<PlanTable[]>([])
 
-  const MockPlanTable: PlanTable[] = [
-    { id: 1, code: "PE-001", name: "Plano de Ensino de Matemática", subjects: "Matemática, Raciocínio Lógico", duration: "80 horas", academicPeriod: "1º Semestre 2025" },
-    { id: 2, code: "PE-002", name: "Plano de Ensino de Matemática", subjects: "Matemática, Raciocínio Lógico", duration: "80 horas", academicPeriod: "1º Semestre 2025" },
-    { id: 3, code: "PE-003", name: "Plano de Ensino de Matemática", subjects: "Matemática, Raciocínio Lógico", duration: "80 horas", academicPeriod: "1º Semestre 2025" },
-    { id: 4, code: "PE-004", name: "Plano de Ensino de Matemática", subjects: "Matemática, Raciocínio Lógico", duration: "80 horas", academicPeriod: "1º Semestre 2025" },
-  ]
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const plansCollection = collection(db, 'plans')
+      const plansSnapshot = await getDocs(plansCollection)
+  
+      const plansData: PlanTable[] = plansSnapshot.docs.map((doc) => {
+        const data = doc.data();
 
+        if (doc.id !== 'counter') {
+          const translatedSubjects = data.subjects
+            ? (data.subjects as string[]).map((subject) => translations.subjects[subject] || subject).join(', ')
+            : ''
+
+          const translatedPeriod = translations.period[data.academicPeriod] || data.academicPeriod
+
+          return {
+            id: doc.id,
+            code: data.code || '',
+            name: data.name || '',
+            subjects: translatedSubjects || '',
+            duration: data.duration ? data.duration.toString() : '',
+            academicPeriod: translatedPeriod || '',
+          };
+        }
+        return undefined
+      }).filter((plan): plan is PlanTable => plan !== undefined)
+  
+      setPlans(plansData)
+    };
+  
+    fetchPlans()
+  }, []);
+
+  console.log(plans)
   return (
     <>
       <MainContent>
         <Add onClick={() => navigate('/planForm')}>Cadastrar Plano de ensino</Add>
         <ContentContainer>
-          <PlanTable plans={MockPlanTable} navigate={navigate}/>
+          <PlanTable plans={plans} navigate={navigate} />
         </ContentContainer>
       </MainContent>
     </>
