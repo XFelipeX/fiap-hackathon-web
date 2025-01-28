@@ -33,6 +33,12 @@ export const ContentContainer = styled.div`
   overflow: auto;
 `;
 
+export const FeedBack = styled.h2`
+  text-align: center;
+  color: ${colors.text};
+  margin: 35px;
+`;
+
 export const Table = styled.table`
   color: ${colors.text};
   width: 100%;

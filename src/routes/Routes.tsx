@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home/Home';
+import Login from '../pages/Login/Login'
 import Plan from '../pages/Plan/Plan';
 import PlanForm from '../pages/PlanForm/PlanForm';
 import Class from '../pages/Class/Class';
@@ -12,6 +13,7 @@ const AppRoutes = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/plan" element={<Plan />} />
         <Route path="/planForm" element={<PlanForm />} />
         <Route path="/planForm/:id" element={<PlanForm />} />
