@@ -1,7 +1,10 @@
 import styled from 'styled-components'
+import { Colors } from "../../constants/Colors";
+
+const colors = Colors.dark;
 
 export const MainContainer = styled.div`
-  background-color: #1D2123;
+  background-color: ${colors.background};
   min-height: 100vh;
   padding: 65px 20% 50px 20%;
 
@@ -11,7 +14,7 @@ export const MainContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  color: white;
+  color: ${colors.text};
   font-size: 16pt;
   margin-bottom: 15px;
 `;
@@ -28,25 +31,25 @@ export const TableContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: #333c40;
+    background: ${colors.secondBackground};
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ED145B;
+    background: ${colors.buttonBackground};
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #c11e46;
+    background: ${colors.buttonBackgroundHover};
   }
 `;
 
 
 export const Table = styled.table`
-  background-color: #333C40;
+  background-color: ${colors.secondBackground};
   margin-bottom: 20px;
-  color: white;
+  color: ${colors.text};
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
@@ -54,7 +57,7 @@ export const Table = styled.table`
 `;
 
 export const TableRow = styled.tr`
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid ${colors.text};
   text-align: center;
   &:last-child {
     border: none;
@@ -62,13 +65,13 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHeader = styled.th`
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid ${colors.text};
   padding: 8px;
   text-align: center;
 `;
 
 export const TableData = styled.td`
-  border-left: 1px solid white;
+  border-left: 1px solid ${colors.text};
   padding: 0px 45px;
   text-align: center;
 `;

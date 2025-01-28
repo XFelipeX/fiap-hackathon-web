@@ -24,7 +24,58 @@ interface ClassTable {
 }
 
 interface ClassTableProps {
-  classes: ClassTable[]
+  classes: ClassTable[],
+  openMenuIndex: number | null,
+  toggleMenu: (index: number) => void,
+  menuRef: React.RefObject<HTMLDivElement>
+}
+
+function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef }: ClassTableProps) {
+  return (
+    <Table>
+      <TableRow>
+        <TableHeader>Código</TableHeader>
+        <TableHeader>Nome</TableHeader>
+        <TableHeader>Sala</TableHeader>
+        <TableHeader>Nº de alunos</TableHeader>
+        <TableHeader>Turno</TableHeader>
+        <TableHeader>Status</TableHeader>
+        <TableHeader></TableHeader>
+      </TableRow>
+      {classes.map((classData, index) => (
+        <TableRow key={index}>
+          <TableData>{classData.code}</TableData>
+          <TableData>{classData.name}</TableData>
+          <TableData>{classData.room}</TableData>
+          <TableData>{classData.studentQnt}</TableData>
+          <TableData>{classData.shift}</TableData>
+          <TableData>{classData.status}</TableData>
+          <TableData>
+            <OptionsButtonContainer>
+              <OptionsButton
+                onClick={() => toggleMenu(index)}
+              >
+                Opções
+              </OptionsButton>
+              {openMenuIndex === index && (
+                <ToggleMenu ref={menuRef}>
+                  <nav>
+                    <ToggleMenuList>
+                      <ToggleMenuItem>Editar</ToggleMenuItem>
+                      <ToggleMenuItem>Excluir</ToggleMenuItem>
+                      <ToggleMenuItem>Alunos</ToggleMenuItem>
+                      <ToggleMenuItem>Professores</ToggleMenuItem>
+                      <ToggleMenuItem>Matérias</ToggleMenuItem>
+                    </ToggleMenuList>
+                  </nav>
+                </ToggleMenu>
+              )}
+            </OptionsButtonContainer>
+          </TableData>
+        </TableRow>
+      ))}  
+    </Table>
+  )
 }
 
 const Class: React.FC = () => {
@@ -48,54 +99,6 @@ const Class: React.FC = () => {
     }
   }, []);
 
-  function ClassTable ({ classes }: ClassTableProps) {
-    return (
-      <Table>
-        <TableRow>
-          <TableHeader>Código</TableHeader>
-          <TableHeader>Nome</TableHeader>
-          <TableHeader>Sala</TableHeader>
-          <TableHeader>Nº de alunos</TableHeader>
-          <TableHeader>Turno</TableHeader>
-          <TableHeader>Status</TableHeader>
-          <TableHeader></TableHeader>
-        </TableRow>
-        {classes.map((classData, index) => (
-          <TableRow key={index}>
-            <TableData>{classData.code}</TableData>
-            <TableData>{classData.name}</TableData>
-            <TableData>{classData.room}</TableData>
-            <TableData>{classData.studentQnt}</TableData>
-            <TableData>{classData.shift}</TableData>
-            <TableData>{classData.status}</TableData>
-            <TableData>
-              <OptionsButtonContainer>
-                <OptionsButton
-                  onClick={() => toggleMenu(index)}
-                >
-                  Opções
-                </OptionsButton>
-                {openMenuIndex === index && (
-                  <ToggleMenu ref={menuRef}>
-                    <nav>
-                      <ToggleMenuList>
-                        <ToggleMenuItem>Editar</ToggleMenuItem>
-                        <ToggleMenuItem>Excluir</ToggleMenuItem>
-                        <ToggleMenuItem>Alunos</ToggleMenuItem>
-                        <ToggleMenuItem>Professores</ToggleMenuItem>
-                        <ToggleMenuItem>Matérias</ToggleMenuItem>
-                      </ToggleMenuList>
-                    </nav>
-                  </ToggleMenu>
-                )}
-              </OptionsButtonContainer>
-            </TableData>
-          </TableRow>
-        ))}  
-      </Table>
-    )
-  }
-
   const MockclassTable: ClassTable[] = [
     { code: "T-001", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
     { code: "T-002", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
@@ -108,7 +111,12 @@ const Class: React.FC = () => {
       <MainContent>
         <Add>Cadastrar Turma</Add>
         <ContentContainer>
-          <ClassTable classes={MockclassTable}/>
+          <ClassTable
+            classes={MockclassTable}
+            openMenuIndex={openMenuIndex}
+            toggleMenu={toggleMenu}
+            menuRef={menuRef}
+          />
         </ContentContainer>
       </MainContent>
     </>

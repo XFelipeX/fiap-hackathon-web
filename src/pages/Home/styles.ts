@@ -1,7 +1,10 @@
 import styled from 'styled-components'
+import { Colors } from "../../constants/Colors";
+
+const colors = Colors.dark;
 
 export const MainContainer = styled.div`
-  background-color: #1D2123;
+  background-color: ${colors.background};
   min-height: 100vh;
   padding: 95px 20% 50px 20%;
 `;
@@ -14,13 +17,13 @@ export const TopContainer = styled.div`
 `;
 
 export const Title = styled.p`
-  color: white;
+  color: ${colors.text};
   font-size: 16pt;
 `;
 
 export const TestsButton = styled.button`
-  background-color: #333C40;
-  color: white;
+  background-color: ${colors.secondBackground};
+  color: ${colors.text};
   font-size: 16pt;
   border: none;
   border-radius: 5px;
@@ -30,20 +33,20 @@ export const TestsButton = styled.button`
 `;
 
 export const TestsButtonAnchor = styled.a`
-  color: white;
+  color: ${colors.text};
   font-size: 16pt;
   text-decoration: none;
 `;
 
 export const ContentContainer = styled.div`
-  background-color: #333C40;
+  background-color: ${colors.secondBackground};
   padding: 40px 40px 5px 40px;
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
 export const ClassItemContainer = styled.div`
-  border: 1px solid white;
+  border: 1px solid ${colors.text};
   border-radius: 5px;
   margin-bottom: 40px;
 `;
@@ -57,7 +60,7 @@ export const ClassItemContentContainer = styled.div`
 
 export const TimeDate = styled.p`
   font-weight: bold;
-  color: white;
+  color: ${colors.text};
   margin-bottom: 18px;
 `;
 
@@ -67,15 +70,15 @@ export const Info = styled.div`
 `;
 
 export const InfoItem = styled.p`
-  color: white;
+  color: ${colors.text};
 `;
 
 export const FilesButton = styled.button`
-  background-color: #ED145B;
+  background-color: ${colors.buttonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
   padding: 10px 40px;
-  color: white;
+  color: ${colors.buttonText};
   cursor: pointer;
 `;
