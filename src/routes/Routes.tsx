@@ -7,6 +7,11 @@ import Class from '../pages/Class/Class';
 import Timeline from '../pages/Timeline/Timeline';
 import StartClass from '../pages/StartClass/StartClass';
 import Navbar from '../components/sidebar/Sidebar';
+import Person from '../pages/Person/Person';
+import Result from '../pages/Result/Result';
+import StudentResult from '../pages/StudentResult/StudentResult';
+import PostResult from '../pages/PostResult/PostResult';
+
 const AppRoutes = () => {
   return (
     <Router>
@@ -20,6 +25,10 @@ const AppRoutes = () => {
         <Route path="/class" element={<Class />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/startclass" element={<StartClass />} />
+        <Route path="/persons" element={<Person />} />
+        <Route path="/result" element={<Result />} />
+        <Route path="/result/:id" element={<StudentResult />} />
+        <Route path="/postResult" element={<PostResult />} />
       </Routes>
     </Router>
   );
