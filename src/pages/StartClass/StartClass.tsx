@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { IoClose } from 'react-icons/io5';
-import { FaRegTrashAlt, FaRegEdit  } from "react-icons/fa";
+import { FaPlus, FaRegTrashAlt, FaRegEdit  } from "react-icons/fa";
+import AddFileModal from '../../components/AddFileModal/AddFileModal';
 import {
   Container,
   Title,
@@ -12,6 +13,7 @@ import {
   FilePanel,
   PanelHeaderContainer,
   FilesList,
+  AddButton,
   File,
   Link,
   ButtonsContainer,
@@ -30,6 +32,7 @@ const validations = Yup.object({
 
 const StartClass: React.FC = () => {
   const [isPanelVisible, setIsPanelVisible] = useState(false)
+  const [isAddFileModalOpen, setIsAddFileModalOpen] = useState(false);
   const [code, setCode] = useState('')
   const currentDate = new Date()
   const day = currentDate.getDate()
@@ -70,6 +73,10 @@ const StartClass: React.FC = () => {
 
   return (
     <Container>
+      <AddFileModal 
+        isVisible={isAddFileModalOpen}
+        onClose={() => setIsAddFileModalOpen(false)}
+      />
       <Title>Aula do dia { formattedDate }</Title>
       <ContentPrimary>
         <FormContainer>
@@ -127,6 +134,7 @@ const StartClass: React.FC = () => {
             </File>
           ))}
         </FilesList>
+        <AddButton onClick={() => setIsAddFileModalOpen(true)}><FaPlus size={18} />Adicionar</AddButton>
       </FilePanel>
 
       <ContentSecondary>

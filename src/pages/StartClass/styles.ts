@@ -90,6 +90,20 @@ export const Link = styled.a`
   text-decoration: none;
 `;
 
+export const AddButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding: 5px 10px;
+  color: ${colors.buttonText};
+  font-size: 12pt;
+  background-color: ${colors.buttonBackground};
+  cursor: pointer;
+`;
+
 export const ButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
