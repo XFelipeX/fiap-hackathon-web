@@ -41,6 +41,10 @@ export const TextInput = styled.input`
   width: 100%;
 `;
 
+export const Error = styled.div`
+  color: ${colors.deleteButtonBackground}
+`;
+
 export const CheckBoxContainer = styled.div`
   display: flex;
   flex-wrap: wrap;

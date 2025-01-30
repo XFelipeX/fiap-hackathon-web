@@ -11,6 +11,7 @@ import {
   InputContainer,
   Label,
   TextInput,
+  Error,
   CheckBoxContainer,
   CheckBoxInput,
   CheckBoxLabel,
@@ -142,7 +143,7 @@ const PlanForm: React.FC = () => {
 					  validationSchema={validations}
             onSubmit={(values) => handleSave(values)}
           >
-            {({ values, handleChange, setFieldValue }) => (
+            {({ values, handleChange, setFieldValue, touched, errors }) => (
               <Form>
                 <InputContainer>
                   <Label htmlFor="name">Nome</Label>
@@ -152,8 +153,8 @@ const PlanForm: React.FC = () => {
                     id="name"
                     onChange={handleChange}
                     value={values.name}
-                    required
                   />
+                  {touched.name && errors.name && <Error>{errors.name}</Error>}
                 </InputContainer>
 
                 <InputContainer>
@@ -178,6 +179,7 @@ const PlanForm: React.FC = () => {
                       </div>
                     ))}
                   </CheckBoxContainer>
+                  {touched.subjects && errors.subjects && <Error>{errors.subjects}</Error>}
                 </InputContainer>
                 
                 <InputContainer>
@@ -190,8 +192,8 @@ const PlanForm: React.FC = () => {
                     max={1200}
                     onChange={handleChange}
                     value={values.duration}
-                    required
                   />
+                  {touched.duration && errors.duration && <Error>{errors.duration}</Error>}
                 </InputContainer>
                 
                 <InputContainer>
@@ -202,7 +204,6 @@ const PlanForm: React.FC = () => {
                     id="academicPeriod"
                     onChange={handleChange}
                     value={values.academicPeriod}
-                    required
                   >
                     <option value="">Selecione um período</option>
                     <option value="1_2025">1º Bimestre 2025</option>
@@ -210,6 +211,7 @@ const PlanForm: React.FC = () => {
                     <option value="3_2025">3º Bimestre 2025</option>
                     <option value="4_2025">4º Bimestre 2025</option>
                   </SelectInput>
+                  {touched.academicPeriod && errors.academicPeriod && <Error>{errors.academicPeriod}</Error>}
                 </InputContainer>
 
                 <SubmitButton type="submit">Salvar</SubmitButton>
