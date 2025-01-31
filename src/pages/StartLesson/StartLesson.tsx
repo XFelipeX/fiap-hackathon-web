@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { IoClose } from 'react-icons/io5';
 import { FaPlus, FaRegTrashAlt, FaRegEdit  } from "react-icons/fa";
 import AddFileModal from '../../components/AddFileModal/AddFileModal';
+import { db } from '../../services/firebase';
+import { collection, getDocs, getDoc, doc, updateDoc } from 'firebase/firestore';
 import {
   Container,
   Title,
@@ -37,10 +39,12 @@ interface File {
 
 interface Lesson {
   id: string
-  timeDate: string
+  timeDate: any
   teacherId: string
+  teacher: any
   subject: string
   classId: string
+  class: any
   status:  'agendada' | 'concluída' | 'cancelada'
   files: File[]
   code: string
@@ -83,17 +87,77 @@ const StartLesson: React.FC = () => {
   const [isPanelVisible, setIsPanelVisible] = useState(false)
   const [isAddFileModalOpen, setIsAddFileModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null >(null)
+  const [lessons, setLessons] = useState<Lesson[] | null>()
   const [code, setCode] = useState('')
   const date = getCurrentDate();
 
-  const generateCode = () => {
-    setCode(Math.floor(100000 + Math.random() * 900000).toString());
+  useEffect(() => {
+    const fetchLessons = async () => {
+      const lessonsCollection = collection(db, 'lessons')
+
+      try {
+        const lessonsSnapshot = await getDocs(lessonsCollection)
+
+        const lessonsData: Lesson[] = await Promise.all(
+          lessonsSnapshot.docs.map( async (document) => {
+            const data = document.data();
+
+            const teacherDocRef = doc(db, 'teachers', data.teacherId);
+            const teacherSnapshot = await getDoc(teacherDocRef);
+            const teacherData = teacherSnapshot.data();
+
+            const classDocRef = doc(db, 'class', data.classId);
+            const classSnapshot = await getDoc(classDocRef);
+            const classData = classSnapshot.data();
+            
+            return {
+              id: document.id,
+              timeDate: data.timeDate,
+              teacherId: data.teacherId,
+              teacher: teacherData,
+              subject: data.subject,
+              classId: data.classId,
+              class: classData,
+              status:  data.status,
+              files: data.files,
+              code: data.code
+            }
+          })
+        )
+        setLessons(lessonsData)
+      } catch (e) {
+        console.error("Erro ao buscar aulas:", e)
+      }
+    }
+    fetchLessons()
+  }, [])
+
+  const generateCode = async () => {
+    if (!selectedLesson) {
+      window.alert('Selecione uma aula primeiro')
+      return false
+    }
+
+    const newCode = (Math.floor(100000 + Math.random() * 900000).toString());
+
+    const lessonsCollection = collection(db, 'lessons')
+    const lessonDoc = doc(lessonsCollection, selectedLesson.id)
+
+    try {
+      await updateDoc(lessonDoc, { code: newCode })
+      console.log('Aula atualizadacom sucesso!')
+      setCode(newCode)
+
+    } catch (e) {
+      console.error('Erro ao atualizar aula:', e)
+    }
   }
   
   const handleLessonSelect = (values: FormValues) => {
-    const lesson = MockLessons.find((lesson) => lesson.id == values.lessonId)
-    if (lesson) {
-      setSelectedLesson(lesson);
+    if (lessons) {
+      const lesson = lessons.find((lesson) => lesson.id == values.lessonId)
+      setSelectedLesson(lesson)
+
     } else {
       setSelectedLesson(null);
     }
@@ -129,11 +193,15 @@ const StartLesson: React.FC = () => {
                     value={values.lessonId}
                   >
                     <option value="">Selecione uma Aula</option>
-                    {MockLessons.map((lesson, index) => (
-                      <option key={index} value={lesson.id}>
-                        {translations.subjects[lesson.subject]} - {new Date(lesson.timeDate).toLocaleDateString('pt-BR')} ({lesson.classId})
-                      </option>
-                    ))}
+                    {lessons && lessons.length > 0 ? (
+                      lessons.map((lesson) => (
+                        <option key={lesson.id} value={lesson.id}>
+                          {translations.subjects[lesson.subject]} - {lesson.timeDate.toDate().toLocaleDateString('pt-BR')} ({lesson.class.name})
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">Carregando aulas...</option>
+                    )}
                   </SelectInput>
                   {touched.lessonId && errors.lessonId && <Error>{errors.lessonId}</Error>}
                 </InputContainer>
@@ -148,6 +216,7 @@ const StartLesson: React.FC = () => {
 
       <AddFileModal 
         isVisible={isAddFileModalOpen}
+        lesson={selectedLesson}
         onClose={() => setIsAddFileModalOpen(false)}
       />
 

@@ -24,7 +24,8 @@ interface AddFileModalProps {
 
 const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
   const [selectedMethod, setSelectedMethod] = useState<'upload' | 'youtube' | 'site' | ''>('');
-  const [url, setUrl] = useState('');
+  const [name, setName] = useState<string>('')
+  const [url, setUrl] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,13 +38,19 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
 
     if (selectedMethod == 'upload') {
       console.log('salvar arquivo', file)
-    } else if (selectedMethod == 'youtube' || selectedMethod == 'site') {
-      console.log('salvar url', url)
+
+    } else if (selectedMethod == 'youtube') {
+      console.log('salvar youtube', name, selectedMethod, url)
+
+    } else if (selectedMethod == 'site') {
+      console.log('salvar site', name, selectedMethod, url)
+
     } else {
       window.alert('Selecione um tipo de arquivo')
       return false
     }
 
+    setName('');
     setUrl('');
     setSelectedMethod('');
     onClose();
@@ -87,12 +94,22 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
           </>
         )}
         {(selectedMethod === 'youtube' || selectedMethod === 'site') && (
-          <Input
-            type="text"
-            placeholder="URL"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
+          <>
+            <Input
+              type="text"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              type="text"
+              placeholder="URL"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              required
+            />
+          </>
         )}
 
           <ButtonContainer>
