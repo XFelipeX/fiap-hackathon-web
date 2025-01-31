@@ -45,13 +45,13 @@ export const ContentContainer = styled.div`
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
-export const ClassItemContainer = styled.div`
+export const LessonItemContainer = styled.div`
   border: 1px solid ${colors.text};
   border-radius: 5px;
   margin-bottom: 40px;
 `;
 
-export const ClassItemContentContainer = styled.div`
+export const LessonItemContentContainer = styled.div`
   padding: 20px;
   display: flex;
   align-items: center;
