@@ -125,6 +125,7 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose, lesson 
         );
       }
     } else if (selectedMethod === 'youtube' || selectedMethod === 'web') {
+      onClose();
       const newFile = {
         name,
         type: selectedMethod === 'youtube' ? 'YouTube' : 'Web',

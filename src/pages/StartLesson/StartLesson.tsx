@@ -4,8 +4,9 @@ import * as Yup from 'yup'
 import { IoClose } from 'react-icons/io5';
 import { FaPlus, FaRegTrashAlt  } from "react-icons/fa";
 import AddFileModal from '../../components/AddFileModal/AddFileModal';
-import { db } from '../../services/firebase';
-import { collection, getDocs, getDoc, doc, updateDoc, onSnapshot  } from 'firebase/firestore';
+import { db, storage } from '../../services/firebase';
+import { collection, getDoc, doc, updateDoc, onSnapshot  } from 'firebase/firestore';
+import { deleteObject, ref } from "firebase/storage"
 import {
   Container,
   Title,
@@ -158,6 +159,35 @@ const StartLesson: React.FC = () => {
     }
   }
 
+  const handleDeleteFile = async (fileToDelete: File) => {
+    if (!selectedLesson) return
+
+    if (!confirm(`Tem certeza que deseja excluir o arquivo ${fileToDelete.name} ?`)) {
+      return
+    }
+
+    const lessonsCollection = collection(db, 'lessons')
+    const lessonDoc = doc(lessonsCollection, selectedLesson.id)
+
+    const updatedFiles = selectedLesson.files.filter(
+      file => file.url !== fileToDelete.url
+    )
+
+    try {
+      await updateDoc(lessonDoc, { files: updatedFiles })
+      console.log('Arquivo removido do Firestore com sucesso')
+
+      if (fileToDelete.type !== "YouTube" && fileToDelete.type !== "Web") {
+        const fileRef = ref(storage, fileToDelete.url)
+        await deleteObject(fileRef)
+        console.log("Arquivo removido do Firebase Storage com sucesso")
+      }
+
+    } catch (e) {
+      console.error('Erro ao excluir arquivo: ', e)
+    }
+  }
+
   const handleLessonSelect = (values: FormValues) => {
     if (lessons) {
       const lesson = lessons.find((lesson) => lesson.id == values.lessonId)
@@ -241,7 +271,7 @@ const StartLesson: React.FC = () => {
               </Link>
                 
                 <ButtonsContainer>
-                  <FaRegTrashAlt onClick={() => setIsPanelVisible(false)} size={24} style={{cursor: 'pointer'}} />
+                  <FaRegTrashAlt onClick={() => handleDeleteFile(file)} size={24} style={{cursor: 'pointer'}} />
                 </ButtonsContainer>
               </File>
             ))
