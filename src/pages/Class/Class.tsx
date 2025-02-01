@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { db } from '../../services/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import {
   MainContent,
   Add,
@@ -35,10 +35,11 @@ interface ClassTableProps {
   openMenuIndex: number | null,
   toggleMenu: (index: number) => void,
   menuRef: React.RefObject<HTMLDivElement>,
-  navigate: (path: string) => void
+  navigate: (path: string) => void,
+  handleDeleteClass: (classData: ClassTable) => void
 }
 
-function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate }: ClassTableProps) {
+function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate, handleDeleteClass }: ClassTableProps) {
   if (classes.length === 0) {
       return <FeedBack>Nenhuma turma ainda.</FeedBack>
     }
@@ -74,7 +75,7 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate }: 
                   <nav>
                     <ToggleMenuList>
                       <ToggleMenuItem onClick={() => navigate(`/classform/${classData.id}`)}>Editar</ToggleMenuItem>
-                      <ToggleMenuItem>Excluir</ToggleMenuItem>
+                      <ToggleMenuItem onClick={() => handleDeleteClass(classData)}>Excluir</ToggleMenuItem>
                       <ToggleMenuItem>Alunos</ToggleMenuItem>
                       <ToggleMenuItem>Professores</ToggleMenuItem>
                     </ToggleMenuList>
@@ -113,43 +114,51 @@ const Class: React.FC = () => {
   }, []);
 
   useEffect(() => {
-      const fetchClasses = async () => {
-        const classesCollection = collection(db, 'class')
-        const classesSnapshot = await getDocs(classesCollection)
-    
-        const classesData: ClassTable[] = classesSnapshot.docs.map((doc) => {
-          const data = doc.data();
+    const fetchClasses = async () => {
+      const classesCollection = collection(db, 'class')
+      const classesSnapshot = await getDocs(classesCollection)
   
-          if (doc.id !== 'counter') {  
-            return {
-              id: doc.id,
-              code: data.code || '',
-              name: data.name || '',
-              qntStudents: data.qntStudents || '',
-              room: data.room || '',
-              shift: data.shift || '',
-              status: data.status || '',
-              studentsId: data.studentsId || [],
-              teachersId: data.teachersId || [],
-            };
-          }
-          return undefined
-        }).filter((classData): classData is ClassTable => classData !== undefined)
-    
-        setClasses(classesData)
-      };
-    
-      fetchClasses()
-    }, []);
+      const classesData: ClassTable[] = classesSnapshot.docs.map((doc) => {
+        const data = doc.data();
 
-  // const MockclassTable: ClassTable[] = [
-  //   { id: '1', code: "T-001", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
-  //   { id: '2', code: "T-002", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
-  //   { id: '3', code: "T-003", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
-  //   { id: '4', code: "T-004", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
-  // ]
+        if (doc.id !== 'counter') {  
+          return {
+            id: doc.id,
+            code: data.code || '',
+            name: data.name || '',
+            qntStudents: data.qntStudents || '',
+            room: data.room || '',
+            shift: data.shift || '',
+            status: data.status || '',
+            studentsId: data.studentsId || [],
+            teachersId: data.teachersId || [],
+          };
+        }
+        return undefined
+      }).filter((classData): classData is ClassTable => classData !== undefined)
+  
+      setClasses(classesData)
+    };
+  
+    fetchClasses()
+  }, []);
 
-  console.log(classes)
+  const handleDeleteClass = async (classData: ClassTable) => {
+    if (window.confirm(`Tem certeza que deseja excluir a turma ${classData.name}`)) {
+      try {
+        const classesCollection = collection(db, 'class')
+        const classDoc = doc(classesCollection, classData.id)
+        await deleteDoc(classDoc)
+        alert(`${classData.name} excluída com sucesso!`)
+
+      } catch (e) {
+        console.error("Erro ao excluir turma: ", e)
+        alert("Erro ao excluir turma. Tente novamente.")
+      }
+    }
+    console.log(classData)
+  }
+
   return (
     <>
       <MainContent>
@@ -161,6 +170,7 @@ const Class: React.FC = () => {
             toggleMenu={toggleMenu}
             menuRef={menuRef}
             navigate={navigate}
+            handleDeleteClass={handleDeleteClass}
           />
         </ContentContainer>
       </MainContent>

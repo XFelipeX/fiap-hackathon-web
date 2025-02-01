@@ -63,8 +63,8 @@ const LessonItem = ({ lessons, fetchLessons }: LessonItemProps) => {
               <div>
                 <TimeDate>{formatDate(lesson.timeDate)}</TimeDate>
                 <Info>
-                  <InfoItem>Turma: {lesson.class.name}</InfoItem>
-                  <InfoItem>Sala: {lesson.class.room}</InfoItem>
+                  <InfoItem>Turma: {lesson?.class?.name || 'Indefinido'}</InfoItem>
+                  <InfoItem>Sala: {lesson?.class?.room || 'Indefinido'}</InfoItem>
                   <InfoItem>Status: {lesson.status}</InfoItem>
                 </Info>
               </div>
