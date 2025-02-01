@@ -21,6 +21,26 @@ export const ModalContainer = styled.div`
   max-width: 500px;
 `;
 
+export const LoadingContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  jusfity-content: center;
+  background-color:rgba(0, 0, 0, 0.3);
+  z-index: 100000;
+`;
+
+export const Loading = styled.div`
+  clip-path: circle(45% at 50% 50%);
+  background: radial-gradient( rgba(0, 0, 0, 0.1), rgba(237, 20, 91, 1));
+  margin: 0px auto;
+  padding: 60px;
+`;
+
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
