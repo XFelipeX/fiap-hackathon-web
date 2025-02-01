@@ -39,6 +39,10 @@ export const TestsButtonAnchor = styled.a`
 `;
 
 export const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: ${colors.secondBackground};
   padding: 40px 40px 5px 40px;
   border-radius: 10px;
@@ -46,6 +50,8 @@ export const ContentContainer = styled.div`
 `;
 
 export const LessonItemContainer = styled.div`
+  flex: 1;
+  width: 100%;
   border: 1px solid ${colors.text};
   border-radius: 5px;
   margin-bottom: 40px;
