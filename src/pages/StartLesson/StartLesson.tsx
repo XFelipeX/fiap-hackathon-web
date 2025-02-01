@@ -20,6 +20,8 @@ import {
   File,
   Link,
   ButtonsContainer,
+  GoodLesson,
+  GoodLessonText,
   ContentSecondary,
   FormContainer,
   InputContainer,
@@ -89,6 +91,7 @@ const StartLesson: React.FC = () => {
   const [isAddFileModalOpen, setIsAddFileModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null >(null)
   const [lessons, setLessons] = useState<Lesson[] | null>()
+  const [showGoodLesson, setShowGoodLesson] = useState(false);
   const [code, setCode] = useState('')
   const date = getCurrentDate();
 
@@ -198,7 +201,23 @@ const StartLesson: React.FC = () => {
     }
   }
 
-  const handleStart = (values: FormValues) => {
+  const handleStart = async (values: FormValues) => {
+    if (!selectedLesson) return
+
+    const lessonsCollection = collection(db, 'lessons')
+    const lessonDoc = doc(lessonsCollection, selectedLesson.id)
+
+    try {
+      await updateDoc(lessonDoc, { status: 'concluída' })
+      console.log('Aula iniciada')
+
+      setShowGoodLesson(true);
+      setTimeout(() => setShowGoodLesson(false), 3000);
+
+    } catch (e) {
+      console.error('Erro ao iniciar aula: ', e)
+    }
+
     console.log(values)
   }
 
@@ -249,6 +268,10 @@ const StartLesson: React.FC = () => {
         <Button onClick={() => setIsPanelVisible(true)}>Arquivos</Button>
       </ContentPrimary>
 
+      <GoodLesson isVisible={showGoodLesson}>
+        <GoodLessonText>Tenha uma boa aula!</GoodLessonText>
+      </GoodLesson>
+
       <AddFileModal 
         isVisible={isAddFileModalOpen}
         lesson={selectedLesson}
@@ -295,86 +318,5 @@ const StartLesson: React.FC = () => {
     </Container>
   );
 };
-
-const MockLessons = [
-  {
-    id: "1A2B3C4D5E",
-    timeDate: "2025-02-02T14:30:00Z",
-    teacherId: "XYZ1234567",
-    subject: "history",
-    classId: "ABC9876543",
-    status: "concluída",
-    files: [
-      { name: "História do Império Romano", type: "YouTube", url: "https://www.youtube.com/watch?v=abcd1234" },
-      { name: "Resumo Império Romano", type: "PDF", url: "https://exemplo.com/resumo-imperio-romano.pdf" }
-    ],
-    code: "123456"
-  },
-  {
-    id: "6F7G8H9I0J",
-    timeDate: "2025-02-03T09:00:00Z",
-    teacherId: "LMN8901234",
-    subject: "geography",
-    classId: "DEF4567890",
-    status: "agendada",
-    files: [
-      { name: "Estudo do Clima e Biomas", type: "YouTube", url: "https://www.youtube.com/watch?v=efgh5678" },
-      { name: "Mapa do Brasil - Recursos Naturais", type: "PDF", url: "https://exemplo.com/mapa-brasil.pdf" }
-    ],
-    code: "654321"
-  },
-  {
-    id: "K1L2M3N4O5",
-    timeDate: "2025-02-04T11:15:00Z",
-    teacherId: "UVW5678901",
-    subject: "biology",
-    classId: "GHI1234567",
-    status: "cancelada",
-    files: [
-      { name: "Células e suas Funções", type: "YouTube", url: "https://www.youtube.com/watch?v=ijkl9012" },
-      { name: "Resumo Células", type: "PDF", url: "https://exemplo.com/resumo-celulas.pdf" }
-    ],
-    code: "789012"
-  },
-  {
-    id: "P6Q7R8S9T0",
-    timeDate: "2025-02-05T15:45:00Z",
-    teacherId: "ABC2345678",
-    subject: "philosophy",
-    classId: "JKL6789012",
-    status: "agendada",
-    files: [
-      { name: "Estudo sobre Machado de Assis", type: "YouTube", url: "https://www.youtube.com/watch?v=mnop3456" },
-      { name: "Resumo Dom Casmurro", type: "PDF", url: "https://exemplo.com/resumo-dom-casmurro.pdf" }
-    ],
-    code: "345678"
-  },
-  {
-    id: "U1V2W3X4Y5",
-    timeDate: "2025-02-06T13:20:00Z",
-    teacherId: "XYZ3456789",
-    subject: "physics",
-    classId: "MNO7890123",
-    status: "concluída",
-    files: [
-      { name: "Leis de Newton - Introdução", type: "YouTube", url: "https://www.youtube.com/watch?v=qrst6789" },
-      { name: "Resumo Leis de Newton", type: "PDF", url: "https://exemplo.com/resumo-leis-de-newton.pdf" }
-    ],
-    code: "901234"
-  },
-  {
-    id: "Z6A7B8C9D0",
-    timeDate: "2025-02-07T17:00:00Z",
-    teacherId: "LMN4567890",
-    subject: "chemistry",
-    classId: "PQR8901234",
-    status: "agendada",
-    files: [
-      { name: "Estudo sobre a Tabela Periódica", type: "YouTube", url: "https://www.youtube.com/watch?v=uvwx9012" },
-      { name: "Resumo da Tabela Periódica", type: "PDF", url: "https://exemplo.com/resumo-tabela-periodica.pdf" }
-    ],
-    code: "567890"
-  }
-];
 
 export default StartLesson;

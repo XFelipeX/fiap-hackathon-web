@@ -1,7 +1,33 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Colors } from "../../constants/Colors";
 
 const colors = Colors.dark;
+
+interface GoodLessonProps {
+  isVisible: boolean;
+}
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0px);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0px);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -108,6 +134,29 @@ export const ButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
 `;
+
+export const GoodLesson = styled.div<GoodLessonProps>`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0px);
+  background: ${colors.editButtonBackground};
+  color: ${colors.buttonText};
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  animation: ${({ isVisible }) => (isVisible ? fadeIn : fadeOut)} 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
+`;
+
+export const GoodLessonText = styled.div`
+  text-align: center;
+  line-height: 50px;
+  color: ${colors.text}
+`;
+
 
 export const ContentSecondary = styled.div`
   flex: 1;
