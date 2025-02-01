@@ -91,44 +91,45 @@ const StartLesson: React.FC = () => {
   const [code, setCode] = useState('')
   const date = getCurrentDate();
 
-  useEffect(() => {
-    const fetchLessons = async () => {
-      const lessonsCollection = collection(db, 'lessons')
+  const fetchLessons = async () => {
+    const lessonsCollection = collection(db, 'lessons')
 
-      try {
-        const lessonsSnapshot = await getDocs(lessonsCollection)
+    try {
+      const lessonsSnapshot = await getDocs(lessonsCollection)
 
-        const lessonsData: Lesson[] = await Promise.all(
-          lessonsSnapshot.docs.map( async (document) => {
-            const data = document.data();
+      const lessonsData: Lesson[] = await Promise.all(
+        lessonsSnapshot.docs.map( async (document) => {
+          const data = document.data();
 
-            const teacherDocRef = doc(db, 'teachers', data.teacherId);
-            const teacherSnapshot = await getDoc(teacherDocRef);
-            const teacherData = teacherSnapshot.data();
+          const teacherDocRef = doc(db, 'teachers', data.teacherId);
+          const teacherSnapshot = await getDoc(teacherDocRef);
+          const teacherData = teacherSnapshot.data();
 
-            const classDocRef = doc(db, 'class', data.classId);
-            const classSnapshot = await getDoc(classDocRef);
-            const classData = classSnapshot.data();
-            
-            return {
-              id: document.id,
-              timeDate: data.timeDate,
-              teacherId: data.teacherId,
-              teacher: teacherData,
-              subject: data.subject,
-              classId: data.classId,
-              class: classData,
-              status:  data.status,
-              files: data.files,
-              code: data.code
-            }
-          })
-        )
-        setLessons(lessonsData)
-      } catch (e) {
-        console.error("Erro ao buscar aulas:", e)
-      }
+          const classDocRef = doc(db, 'class', data.classId);
+          const classSnapshot = await getDoc(classDocRef);
+          const classData = classSnapshot.data();
+          
+          return {
+            id: document.id,
+            timeDate: data.timeDate,
+            teacherId: data.teacherId,
+            teacher: teacherData,
+            subject: data.subject,
+            classId: data.classId,
+            class: classData,
+            status:  data.status,
+            files: data.files,
+            code: data.code
+          }
+        })
+      )
+      setLessons(lessonsData)
+    } catch (e) {
+      console.error("Erro ao buscar aulas:", e)
     }
+  }
+
+  useEffect(() => {
     fetchLessons()
   }, [])
 
@@ -217,7 +218,10 @@ const StartLesson: React.FC = () => {
       <AddFileModal 
         isVisible={isAddFileModalOpen}
         lesson={selectedLesson}
-        onClose={() => setIsAddFileModalOpen(false)}
+        onClose={() => {
+          setIsAddFileModalOpen(false);
+          fetchLessons();
+        }}
       />
 
       <FilePanel isVisible={isPanelVisible}>
