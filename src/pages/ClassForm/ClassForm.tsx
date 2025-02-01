@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { db } from '../../services/firebase';
-import { collection, doc, getDoc, setDoc, updateDoc, addDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, addDoc } from "firebase/firestore";
 
 import {
   MainContainer,
@@ -32,6 +32,25 @@ interface FormValues {
   status: string
   students: string[]
   teachers: string[]
+}
+
+interface Teachers {
+  id: string
+  code: string
+  name: string
+  birthDay: string
+  tel: string
+  email: string
+  subjects: string[]
+}
+
+interface Students {
+  id: string
+  code: string
+  name: string
+  birthDay: string
+  tel: string
+  email: string
 }
 
 const validations = Yup.object({
@@ -74,7 +93,8 @@ const mockTeachers = [
 const ClassForm: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
-  const [sortedStudents, setSortedStudents] = useState(mockStudents);
+  const [teachers, setTeachers] = useState<Teachers[]>([]);
+  const [students, setStudents] = useState<Students[]>([]);
   const [initialValues, setInitialValues] = useState<FormValues>({
     name: '',
     room: '',
@@ -101,16 +121,68 @@ const ClassForm: React.FC = () => {
     fetchClass()
   }, [id])
 
+  const fetchTeacher = async () => {
+      const teachersCollection = collection(db, 'teachers')
+      const teachersSnapshot = await getDocs(teachersCollection)
+  
+      const teachersData: Teachers[] = teachersSnapshot.docs.map((doc) => {
+      const data = doc.data();
+  
+      if (doc.id !== 'counter') {  
+        return {
+          id: doc.id,
+          code: data.code || '',
+          name: data.name || '',
+          birthDay: data.birthDay || '',
+          tel: data.tel || '',
+          email: data.email || '',
+          subjects: data.subjects || []
+        };
+      }
+      return undefined
+    }).filter((teachersData): teachersData is Teachers => teachersData !== undefined)
+  
+    setTeachers(teachersData)
+  };
+  
+  const fetchStudents = async () => {
+    const studentsCollection = collection(db, 'students')
+    const studentsSnapshot = await getDocs(studentsCollection)
+  
+    const studentsData: Students[] = studentsSnapshot.docs.map((doc) => {
+    const data = doc.data();
+  
+    if (doc.id !== 'counter') {  
+      return {
+        id: doc.id,
+        code: data.code || '',
+        name: data.name || '',
+        birthDay: data.birthDay || '',
+        tel: data.tel || '',
+        email: data.email || ''
+      };
+    }
+    return undefined
+  }).filter((studentsData): studentsData is Students => studentsData !== undefined)
+  
+  setStudents(studentsData)
+  };
+  
+  useEffect(() => {
+    fetchStudents()
+    fetchTeacher()
+  }, []);
+
   const sortByName = () => {
-    const sorted = [...sortedStudents].sort((a, b) => a.name.localeCompare(b.name));
-    setSortedStudents(sorted);
+    const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
+    setStudents(sorted);
   };
   
   const sortByAge = () => {
-    const sorted = [...sortedStudents].sort((a, b) => 
+    const sorted = [...students].sort((a, b) => 
       (new Date(a.birthDay).getFullYear() - new Date(b.birthDay).getFullYear())
     );
-    setSortedStudents(sorted);
+    setStudents(sorted);
   };
 
   const handleSave = (values: FormValues) => {
@@ -225,7 +297,7 @@ const ClassForm: React.FC = () => {
                   </div>
                 </CheckBoxContainerHeader>
                 <CheckBoxContainer>
-                  {sortedStudents.map((student) => (
+                  {students.map((student) => (
                     <CheckBoxInputContainer>
                       <CheckBoxInput
                         type="checkbox"
@@ -242,7 +314,7 @@ const ClassForm: React.FC = () => {
                       />
                       <CheckBoxInputLabel htmlFor={student.id}>
                         <p>{student.name}</p>
-                        <p style={{fontSize: '12pt'}}>Idade: {new Date().getFullYear() - new Date(student.birthDay).getFullYear()}</p>
+                        <p style={{fontSize: '12pt'}}>Idade: {new Date().getFullYear() - student.birthDay.toDate().getFullYear()}</p>
                       </CheckBoxInputLabel>
                     </CheckBoxInputContainer>
                   ))}
@@ -255,7 +327,7 @@ const ClassForm: React.FC = () => {
                   <CheckBoxLabel>Professores</CheckBoxLabel>
                 </CheckBoxContainerHeader>
                 <CheckBoxContainer>
-                  {mockTeachers.map((teacher) => (
+                  {teachers.map((teacher) => (
                     <CheckBoxInputContainer>
                       <CheckBoxInput
                         type="checkbox"
