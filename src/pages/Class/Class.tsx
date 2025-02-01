@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { db } from '../../services/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import {
   MainContent,
   Add,
   ContentContainer,
+  FeedBack,
   Table,
   TableRow,
   TableHeader,
@@ -13,24 +16,33 @@ import {
   ToggleMenuList,
   ToggleMenuItem
 } from './styles'
+import { useNavigate } from 'react-router-dom'
 
 interface ClassTable {
-  code: string,
-  name: string,
-  room: string,
-  studentQnt: string,
-  shift: "Manhã" | "Tarde" | "Noite",
-  status: "Ativa" | "Inativa"
+  id: string
+  code: string
+  name: string
+  room: string
+  qntStudents: string
+  shift: string
+  status: string
+  studentsId: []
+  teachersId: []
 }
 
 interface ClassTableProps {
   classes: ClassTable[],
   openMenuIndex: number | null,
   toggleMenu: (index: number) => void,
-  menuRef: React.RefObject<HTMLDivElement>
+  menuRef: React.RefObject<HTMLDivElement>,
+  navigate: (path: string) => void
 }
 
-function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef }: ClassTableProps) {
+function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate }: ClassTableProps) {
+  if (classes.length === 0) {
+      return <FeedBack>Nenhuma turma ainda.</FeedBack>
+    }
+
   return (
     <Table>
       <TableRow>
@@ -47,7 +59,7 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef }: ClassTable
           <TableData>{classData.code}</TableData>
           <TableData>{classData.name}</TableData>
           <TableData>{classData.room}</TableData>
-          <TableData>{classData.studentQnt}</TableData>
+          <TableData>{classData.qntStudents}</TableData>
           <TableData>{classData.shift}</TableData>
           <TableData>{classData.status}</TableData>
           <TableData>
@@ -61,11 +73,10 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef }: ClassTable
                 <ToggleMenu ref={menuRef}>
                   <nav>
                     <ToggleMenuList>
-                      <ToggleMenuItem>Editar</ToggleMenuItem>
+                      <ToggleMenuItem onClick={() => navigate(`/classform/${classData.id}`)}>Editar</ToggleMenuItem>
                       <ToggleMenuItem>Excluir</ToggleMenuItem>
                       <ToggleMenuItem>Alunos</ToggleMenuItem>
                       <ToggleMenuItem>Professores</ToggleMenuItem>
-                      <ToggleMenuItem>Matérias</ToggleMenuItem>
                     </ToggleMenuList>
                   </nav>
                 </ToggleMenu>
@@ -79,6 +90,8 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef }: ClassTable
 }
 
 const Class: React.FC = () => {
+  const navigate = useNavigate()
+  const [classes, setClasses] = useState<ClassTable[]>([]);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -99,23 +112,55 @@ const Class: React.FC = () => {
     }
   }, []);
 
-  const MockclassTable: ClassTable[] = [
-    { code: "T-001", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
-    { code: "T-002", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
-    { code: "T-003", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
-    { code: "T-004", name: "Turma A - 1º Ano", room: "Sala 101", studentQnt: "30", shift: "Tarde", status: "Ativa" },
-  ]
+  useEffect(() => {
+      const fetchClasses = async () => {
+        const classesCollection = collection(db, 'class')
+        const classesSnapshot = await getDocs(classesCollection)
+    
+        const classesData: ClassTable[] = classesSnapshot.docs.map((doc) => {
+          const data = doc.data();
+  
+          if (doc.id !== 'counter') {  
+            return {
+              id: doc.id,
+              code: data.code || '',
+              name: data.name || '',
+              qntStudents: data.qntStudents || '',
+              room: data.room || '',
+              shift: data.shift || '',
+              status: data.status || '',
+              studentsId: data.studentsId || [],
+              teachersId: data.teachersId || [],
+            };
+          }
+          return undefined
+        }).filter((classData): classData is ClassTable => classData !== undefined)
+    
+        setClasses(classesData)
+      };
+    
+      fetchClasses()
+    }, []);
 
+  // const MockclassTable: ClassTable[] = [
+  //   { id: '1', code: "T-001", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
+  //   { id: '2', code: "T-002", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
+  //   { id: '3', code: "T-003", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
+  //   { id: '4', code: "T-004", name: "Turma A - 1º Ano", room: "Sala 101", qntStudents: "30", shift: "Tarde", status: "Ativa", studentsId: [], teachersId: [] },
+  // ]
+
+  console.log(classes)
   return (
     <>
       <MainContent>
-        <Add>Cadastrar Turma</Add>
+        <Add onClick={() => navigate('/classform')}>Cadastrar Turma</Add>
         <ContentContainer>
           <ClassTable
-            classes={MockclassTable}
+            classes={classes}
             openMenuIndex={openMenuIndex}
             toggleMenu={toggleMenu}
             menuRef={menuRef}
+            navigate={navigate}
           />
         </ContentContainer>
       </MainContent>
