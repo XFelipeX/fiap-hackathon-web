@@ -1,25 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-import { IoClose } from 'react-icons/io5';
-import { FaPlus, FaRegTrashAlt  } from "react-icons/fa";
 import AddFileModal from '../../components/AddFileModal/AddFileModal';
-import { db, storage } from '../../services/firebase';
+import FilePanel from '../../components/FilePanel/FilePanel';
+import { db } from '../../services/firebase';
 import { collection, getDoc, doc, updateDoc, onSnapshot  } from 'firebase/firestore';
-import { deleteObject, ref } from "firebase/storage"
 import {
   Container,
   Title,
   Button,
   GeneratedCode,
   ContentPrimary,
-  FilePanel,
-  PanelHeaderContainer,
-  FilesList,
-  AddButton,
-  File,
-  Link,
-  ButtonsContainer,
   GoodLesson,
   GoodLessonText,
   ContentSecondary,
@@ -162,35 +153,6 @@ const StartLesson: React.FC = () => {
     }
   }
 
-  const handleDeleteFile = async (fileToDelete: File) => {
-    if (!selectedLesson) return
-
-    if (!confirm(`Tem certeza que deseja excluir o arquivo ${fileToDelete.name} ?`)) {
-      return
-    }
-
-    const lessonsCollection = collection(db, 'lessons')
-    const lessonDoc = doc(lessonsCollection, selectedLesson.id)
-
-    const updatedFiles = selectedLesson.files.filter(
-      file => file.url !== fileToDelete.url
-    )
-
-    try {
-      await updateDoc(lessonDoc, { files: updatedFiles })
-      console.log('Arquivo removido do Firestore com sucesso')
-
-      if (fileToDelete.type !== "YouTube" && fileToDelete.type !== "Web") {
-        const fileRef = ref(storage, fileToDelete.url)
-        await deleteObject(fileRef)
-        console.log("Arquivo removido do Firebase Storage com sucesso")
-      }
-
-    } catch (e) {
-      console.error('Erro ao excluir arquivo: ', e)
-    }
-  }
-
   const handleLessonSelect = (values: FormValues) => {
     if (lessons) {
       const lesson = lessons.find((lesson) => lesson.id == values.lessonId)
@@ -281,31 +243,12 @@ const StartLesson: React.FC = () => {
         }}
       />
 
-      <FilePanel isVisible={isPanelVisible}>
-        <PanelHeaderContainer>
-          <h2>Arquivos da Aula</h2>
-          <IoClose onClick={() => setIsPanelVisible(false)} size={30} style={{cursor: 'pointer'}}/>
-        </PanelHeaderContainer>
-        <FilesList>
-          {selectedLesson && selectedLesson?.files.length > 0 ? (
-            selectedLesson?.files.map((file) => (
-              <File>
-                <Link href={file.url} target="_blank">{file.name} - {file.type}
-              </Link>
-                
-                <ButtonsContainer>
-                  <FaRegTrashAlt onClick={() => handleDeleteFile(file)} size={24} style={{cursor: 'pointer'}} />
-                </ButtonsContainer>
-              </File>
-            ))
-          ): (
-            <p>Não há arquivo para exibir.</p>
-          )}
-        </FilesList>
-        {selectedLesson && (
-          <AddButton onClick={() => setIsAddFileModalOpen(true)}><FaPlus size={18} />Adicionar</AddButton>
-        )}
-      </FilePanel>
+      <FilePanel
+        isVisible={isPanelVisible}
+        lesson={ selectedLesson }
+        onAdd={() => setIsAddFileModalOpen(true)}
+        onClose={() => setIsPanelVisible(false)}
+      />
 
       <ContentSecondary>
         <Button onClick={() => generateCode()} primary>Gerar Código</Button>
