@@ -229,7 +229,8 @@ const StartLesson: React.FC = () => {
           {selectedLesson && selectedLesson?.files.length > 0 ? (
             selectedLesson?.files.map((file) => (
               <File>
-                <Link href={file.url}>{file.name} - {file.type}</Link>
+                <Link href={file.url} target="_blank">{file.name} - {file.type}
+              </Link>
                 
                 <ButtonsContainer>
                   <FaRegEdit onClick={() => setIsPanelVisible(false)} size={24} style={{cursor: 'pointer'}} />
