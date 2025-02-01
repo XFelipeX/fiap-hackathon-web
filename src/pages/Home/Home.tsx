@@ -12,6 +12,7 @@ import {
   TestsButton,
   TestsButtonAnchor,
   ContentContainer,
+  FeedBack,
   LessonItemContainer,
   LessonItemContentContainer,
   TimeDate,
@@ -125,8 +126,11 @@ const Home: React.FC = () => {
             };
           })
         );
-        
-        setLessons(lessonsData);
+
+        const today = new Date().toISOString().split('T')[0];
+        const todayLessons = lessonsData.filter((lesson) => lesson.timeDate.toDate().toISOString().split('T')[0] === today);
+
+        setLessons(todayLessons);
       });
     };
   
@@ -144,8 +148,12 @@ const Home: React.FC = () => {
           </TestsButton>
         </TopContainer>
         <ContentContainer>
-          {lessons != null || lessons != undefined ? (
-            <LessonItem lessons={ lessons } fetchLessons={ fetchLessons }/>
+          {lessons ? (
+            lessons.length > 0 ? (
+              <LessonItem lessons={ lessons } fetchLessons={ fetchLessons }/>
+            ) : (
+              <FeedBack>Nenhuma aula para hoje</FeedBack>
+            )
           ) : (
             <>
               <l-bouncy

@@ -49,6 +49,12 @@ export const ContentContainer = styled.div`
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
+export const FeedBack = styled.p`
+  color: ${colors.text};
+  text-align: center;
+  margin-bottom: 35px;
+`;
+
 export const LessonItemContainer = styled.div`
   flex: 1;
   width: 100%;
