@@ -8,7 +8,7 @@ import ClassForm from '../pages/ClassForm/ClassForm'
 import Timeline from '../pages/Timeline/Timeline';
 import StartLesson from '../pages/StartLesson/StartLesson';
 import Navbar from '../components/sidebar/Sidebar';
-import Person from '../pages/Person/Person';
+import People from '../pages/People/People';
 import Result from '../pages/Result/Result';
 import StudentResult from '../pages/StudentResult/StudentResult';
 import PostResult from '../pages/PostResult/PostResult';
@@ -28,7 +28,7 @@ const AppRoutes = () => {
         <Route path="/classform/:id" element={<ClassForm />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/startlesson" element={<StartLesson />} />
-        <Route path="/persons" element={<Person />} />
+        <Route path="/people" element={<People />} />
         <Route path="/result" element={<Result />} />
         <Route path="/result/:id" element={<StudentResult />} />
         <Route path="/postResult" element={<PostResult />} />

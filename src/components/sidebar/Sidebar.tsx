@@ -37,7 +37,7 @@ const navItems: NavItem[] = [
     id: 3,
     label: 'Gestão de pessoas',
     icon: <FaPerson size={18} />,
-    path: '/persons',
+    path: '/people',
   },
   {
     id: 3,

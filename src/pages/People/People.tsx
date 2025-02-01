@@ -106,8 +106,8 @@ const formatDate = (timestamp: {seconds: number; nanoseconds: number}) => {
 const Person: React.FC = () => {
   const navigate = useNavigate()
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
-  const [teachers, setTeachers] = useState<TeachersTable[]>([])
-  const [students, setStudents] = useState<StudentsTable[]>([])
+  const [teachers, setTeachers] = useState<TeachersTable[]>([]);
+  const [students, setStudents] = useState<StudentsTable[]>([]);
   const [personSelected, setPersonSelected] = useState<'student' | 'teacher'>('teacher');
   const menuRef = useRef<HTMLDivElement | null>(null);
 
