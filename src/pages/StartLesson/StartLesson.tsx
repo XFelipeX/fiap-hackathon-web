@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { IoClose } from 'react-icons/io5';
-import { FaPlus, FaRegTrashAlt, FaRegEdit  } from "react-icons/fa";
+import { FaPlus, FaRegTrashAlt  } from "react-icons/fa";
 import AddFileModal from '../../components/AddFileModal/AddFileModal';
 import { db } from '../../services/firebase';
-import { collection, getDocs, getDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, updateDoc, onSnapshot  } from 'firebase/firestore';
 import {
   Container,
   Title,
@@ -92,15 +92,13 @@ const StartLesson: React.FC = () => {
   const date = getCurrentDate();
 
   const fetchLessons = async () => {
-    const lessonsCollection = collection(db, 'lessons')
-
-    try {
-      const lessonsSnapshot = await getDocs(lessonsCollection)
-
+    const lessonsCollection = collection(db, 'lessons');
+    
+    onSnapshot(lessonsCollection, async (snapshot) => {
       const lessonsData: Lesson[] = await Promise.all(
-        lessonsSnapshot.docs.map( async (document) => {
+        snapshot.docs.map(async (document) => {
           const data = document.data();
-
+          
           const teacherDocRef = doc(db, 'teachers', data.teacherId);
           const teacherSnapshot = await getDoc(teacherDocRef);
           const teacherData = teacherSnapshot.data();
@@ -117,21 +115,27 @@ const StartLesson: React.FC = () => {
             subject: data.subject,
             classId: data.classId,
             class: classData,
-            status:  data.status,
+            status: data.status,
             files: data.files,
             code: data.code
-          }
+          };
         })
-      )
-      setLessons(lessonsData)
-    } catch (e) {
-      console.error("Erro ao buscar aulas:", e)
-    }
-  }
+      );
+      
+      setLessons(lessonsData);
+      
+      if (selectedLesson) {
+        const updatedSelectedLesson = lessonsData.find(lesson => lesson.id === selectedLesson.id);
+        if (updatedSelectedLesson) {
+          setSelectedLesson(updatedSelectedLesson);
+        }
+      }
+    });
+  };
 
   useEffect(() => {
-    fetchLessons()
-  }, [])
+    fetchLessons();
+  }, []);
 
   const generateCode = async () => {
     if (!selectedLesson) {
@@ -153,7 +157,7 @@ const StartLesson: React.FC = () => {
       console.error('Erro ao atualizar aula:', e)
     }
   }
-  
+
   const handleLessonSelect = (values: FormValues) => {
     if (lessons) {
       const lesson = lessons.find((lesson) => lesson.id == values.lessonId)
@@ -237,7 +241,6 @@ const StartLesson: React.FC = () => {
               </Link>
                 
                 <ButtonsContainer>
-                  <FaRegEdit onClick={() => setIsPanelVisible(false)} size={24} style={{cursor: 'pointer'}} />
                   <FaRegTrashAlt onClick={() => setIsPanelVisible(false)} size={24} style={{cursor: 'pointer'}} />
                 </ButtonsContainer>
               </File>
