@@ -33,6 +33,12 @@ export const ContentContainer = styled.div`
   overflow: visible;
 `;
 
+export const FeedBack = styled.h2`
+  text-align: center;
+  color: ${colors.text};
+  padding: 35px;
+`;
+
 export const Table = styled.table`
   color: ${colors.text};
   width: 100%;
@@ -46,7 +52,12 @@ export const TableRow = styled.tr`
   }
   &:last-child {
     border: none;
-    border-radius: 10px;
+  }
+  &:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: 10px;
   }
 `;
 
