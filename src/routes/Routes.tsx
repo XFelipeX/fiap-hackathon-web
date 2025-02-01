@@ -5,7 +5,7 @@ import Plan from '../pages/Plan/Plan';
 import PlanForm from '../pages/PlanForm/PlanForm';
 import Class from '../pages/Class/Class';
 import Timeline from '../pages/Timeline/Timeline';
-import StartClass from '../pages/StartClass/StartClass';
+import StartLesson from '../pages/StartLesson/StartLesson';
 import Navbar from '../components/sidebar/Sidebar';
 import Person from '../pages/Person/Person';
 import Result from '../pages/Result/Result';
@@ -24,7 +24,7 @@ const AppRoutes = () => {
         <Route path="/planForm/:id" element={<PlanForm />} />
         <Route path="/class" element={<Class />} />
         <Route path="/timeline" element={<Timeline />} />
-        <Route path="/startclass" element={<StartClass />} />
+        <Route path="/startlesson" element={<StartLesson />} />
         <Route path="/persons" element={<Person />} />
         <Route path="/result" element={<Result />} />
         <Route path="/result/:id" element={<StudentResult />} />

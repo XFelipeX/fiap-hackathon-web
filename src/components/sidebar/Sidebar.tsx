@@ -135,7 +135,7 @@ const Sidebar: React.FC = () => {
           </NavItem>
         ))}
       </NavList>
-      <Button onClick={() => navigate('/startclass')}>
+      <Button onClick={() => navigate('/startlesson')}>
         {isExpanded ? 'Iniciar Aula' : <FaSchool size={18} />}
       </Button>
     </SidebarContainer>
