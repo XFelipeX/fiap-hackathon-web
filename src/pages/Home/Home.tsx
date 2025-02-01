@@ -6,43 +6,43 @@ import {
   TestsButton,
   TestsButtonAnchor,
   ContentContainer,
-  ClassItemContainer,
-  ClassItemContentContainer,
+  LessonItemContainer,
+  LessonItemContentContainer,
   TimeDate,
   Info,
   InfoItem,
   FilesButton
 } from './styles'
 
-interface ClassData {
+interface LessonData {
   timeDate: string;
   className: string;
   room: string;
   status: string;
 }
  
-interface ClassItemProps {
-  classes: ClassData[];
+interface LessonItemProps {
+  lessons: LessonData[];
 }
 
-function ClassItem ({ classes }: ClassItemProps) {
+function LessonItem ({ lessons }: LessonItemProps) {
   return (
     <>
-      {classes.map((classData) => (
+      {lessons.map((lesson) => (
         <>
-        <ClassItemContainer>
-          <ClassItemContentContainer>
+        <LessonItemContainer>
+          <LessonItemContentContainer>
             <div>
-              <TimeDate>{classData.timeDate}</TimeDate>
+              <TimeDate>{lesson.timeDate}</TimeDate>
               <Info>
-                <InfoItem>{classData.className}</InfoItem>
-                <InfoItem>{classData.room}</InfoItem>
-                <InfoItem>{classData.status}</InfoItem>
+                <InfoItem>{lesson.className}</InfoItem>
+                <InfoItem>{lesson.room}</InfoItem>
+                <InfoItem>{lesson.status}</InfoItem>
               </Info>
             </div>
             <FilesButton>Arquivos</FilesButton>
-          </ClassItemContentContainer>
-        </ClassItemContainer>
+          </LessonItemContentContainer>
+        </LessonItemContainer>
         </>
       ))}
     </>
@@ -51,7 +51,7 @@ function ClassItem ({ classes }: ClassItemProps) {
 
 const Home: React.FC = () => {
 
-  const mockClasses: ClassData[] = [
+  const mockLessons: LessonData[] = [
     { timeDate: "07:00 - Segunda", className: "Turma: Turma B - 1º Ano", room: "Sala: 102", status: "Status: Cancelada"},
     { timeDate: "07:00 - Segunda", className: "Turma: Turma B - 1º Ano", room: "Sala: 102", status: "Status: Ativa"},
     { timeDate: "07:00 - Segunda", className: "Turma: Turma B - 1º Ano", room: "Sala: 102", status: "Status: Ativa"},
@@ -68,7 +68,7 @@ const Home: React.FC = () => {
           </TestsButton>
         </TopContainer>
         <ContentContainer>
-          <ClassItem classes={mockClasses}/>
+          <LessonItem lessons={mockLessons}/>
         </ContentContainer>
       </MainContainer>
     </>
