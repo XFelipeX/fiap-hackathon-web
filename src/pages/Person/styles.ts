@@ -6,11 +6,42 @@ const colors = Colors.dark;
 export const MainContent = styled.div`
   background-color: ${colors.background};
   min-height: 100vh;
-  padding: 95px 20% 250px 20%;
+  padding: 50px 20% 250px 20%;
 
   @media (max-width: 1360px) {
-    padding: 95px 15% 250px 15%;
+    padding: 50px 15% 250px 15%;
   }
+`;
+
+export const Buttons = styled.div`
+  display: flex;
+  justify-content: space-between
+`;
+
+export const TeacherButton = styled.button<{ selected?: boolean }>`
+  background-color: ${(props) => (props.selected ? colors.buttonBackground : colors.secondBackground)};
+  height: fit-content;
+  border: none;
+  border-radius: 5px;
+  font-size: 15pt;
+  padding: 10px 30px;
+  margin-right: 10px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 40px;
+`;
+
+export const StudentButton = styled.button<{ selected?: boolean }>`
+  background-color: ${(props) => (props.selected ? colors.buttonBackground : colors.secondBackground)};
+  height: fit-content;
+  border: none;
+  border-radius: 5px;
+  font-size: 15pt;
+  padding: 10px 30px;
+  margin-right: 10px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 40px;
 `;
 
 export const Add = styled.button`
@@ -23,6 +54,9 @@ export const Add = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 40px;
+  &:hover {
+    background-color: ${colors.buttonBackgroundHover}
+  }
 `;
 
 export const AddStudent = styled.button`
@@ -58,7 +92,12 @@ export const TableRow = styled.tr`
   }
   &:last-child {
     border: none;
-    border-radius: 10px;
+  }
+  &:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: 10px;
   }
 `;
 
