@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { IoClose, IoGlobeOutline  } from 'react-icons/io5';
 import { FaArrowUpFromBracket, FaYoutube  } from "react-icons/fa6";
+import { db } from '../../services/firebase';
+import { collection, getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import {
   Overlay,
@@ -17,13 +20,27 @@ import {
   Button
 } from './styles'
 
+interface Lesson {
+  id: string;
+  timeDate: any;
+  teacherId: string;
+  teacher: any;
+  subject: string;
+  classId: string;
+  class: any;
+  status:  'agendada' | 'concluída' | 'cancelada';
+  files: File[];
+  code: string;
+}
+
 interface AddFileModalProps {
   isVisible: boolean;
   onClose: () => void;
+  lesson: Lesson;
 }
 
-const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
-  const [selectedMethod, setSelectedMethod] = useState<'upload' | 'youtube' | 'site' | ''>('');
+const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose, lesson }) => {
+  const [selectedMethod, setSelectedMethod] = useState<'upload' | 'youtube' | 'web' | ''>('');
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
@@ -33,16 +50,74 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
     setFile(selectedFile);
   };
 
+  const updateFile = async (fileData) => {
+    const lessonsCollection = collection(db, 'lessons')
+    const lessonDoc = doc(lessonsCollection, lesson.id)
+
+    try {
+      const lessonSnapshot = await getDoc(lessonDoc);
+      const lessonData = lessonSnapshot.data();
+
+      if (lessonData) {
+        const updatedFiles = [...(lessonData.files || []), fileData];
+        await updateDoc(lessonDoc, { files: updatedFiles })
+
+      } else {
+        console.error('Documento não encontrado!')
+      }
+    } catch (e) {
+      console.error('Erro ao adicionar arquivo', e)
+    }
+  }
+
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     if (selectedMethod == 'upload') {
-      console.log('salvar arquivo', file)
+      if (file) {
+        const storage = getStorage()
+        const fileRef = ref(storage, `files/${file.name}`)
+        
+        const uploadTask = uploadBytesResumable(fileRef, file)
 
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+          },
+          (error) => {
+            console.error("Erro no upload:", error);
+            window.alert("Erro ao enviar o arquivo. Tente novamente.");
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              const fileType = getFileType(file.type);
+              console.log(fileType)
+
+              const newFile = {
+                name: file.name,
+                type: fileType,
+                url: downloadURL,
+              };
+
+              await updateFile(newFile);
+              setName('');
+              setUrl('');
+              setSelectedMethod('');
+              onClose();
+
+            } catch (error) {
+              console.error("Erro ao obter URL de download:", error);
+              window.alert("Erro ao obter a URL do arquivo. Tente novamente.");
+            }
+          }
+        );
+      }
     } else if (selectedMethod == 'youtube') {
       console.log('salvar youtube', name, selectedMethod, url)
 
-    } else if (selectedMethod == 'site') {
+    } else if (selectedMethod == 'web') {
       console.log('salvar site', name, selectedMethod, url)
 
     } else {
@@ -54,6 +129,19 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
     setUrl('');
     setSelectedMethod('');
     onClose();
+  };
+
+  const getFileType = (mimeType: string) => {
+    switch (mimeType) {
+      case "application/pdf": return 'PDF';
+      case "text/plain": return 'TXT';
+      case "image/png": return 'PNG';
+      case "image/jpeg": return 'JPEG';
+      case "image/jpg": return 'JPG';
+      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": return 'Word';
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": return 'Excel';
+      default: return 'Desconhecido';
+    }
   };
 
   if (!isVisible) return null;
@@ -77,7 +165,7 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
             <FaYoutube size={30} />
             YouTube
           </OptionButton>
-          <OptionButton active={selectedMethod === 'site'} onClick={() => setSelectedMethod('site')}>
+          <OptionButton active={selectedMethod === 'web'} onClick={() => setSelectedMethod('web')}>
             <IoGlobeOutline size={30} />
             Site
           </OptionButton>
@@ -93,7 +181,7 @@ const AddFileModal: React.FC<AddFileModalProps> = ({ isVisible, onClose }) => {
             }
           </>
         )}
-        {(selectedMethod === 'youtube' || selectedMethod === 'site') && (
+        {(selectedMethod === 'youtube' || selectedMethod === 'web') && (
           <>
             <Input
               type="text"
