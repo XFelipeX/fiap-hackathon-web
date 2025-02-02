@@ -45,6 +45,10 @@ export const Input = styled.input`
   background-color: transparent;
 `;
 
+export const Error = styled.div`
+  color: ${colors.deleteButtonBackground}
+`;
+
 export const Link = styled.a`
   color: ${colors.text};
 `;

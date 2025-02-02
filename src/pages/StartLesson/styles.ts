@@ -36,7 +36,7 @@ export const Container = styled.div`
   height: 100vh;
   background-color: ${colors.background};
   color: #fff;
-  padding: 20px 0;
+  padding: 50px 0px 20px 0px;
 `;
 
 export const Title = styled.h2`

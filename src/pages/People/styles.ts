@@ -6,10 +6,10 @@ const colors = Colors.dark;
 export const MainContent = styled.div`
   background-color: ${colors.background};
   min-height: 100vh;
-  padding: 50px 20% 250px 20%;
+  padding: 95px 20% 250px 20%;
 
   @media (max-width: 1360px) {
-    padding: 50px 15% 250px 15%;
+    padding: 95px 15% 250px 15%;
   }
 `;
 

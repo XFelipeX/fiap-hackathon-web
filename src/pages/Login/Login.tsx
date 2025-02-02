@@ -1,6 +1,9 @@
 import React from 'react'
 import { Formik, Form } from 'formik'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../services/firebase'
 import * as Yup from 'yup'
+import { useNavigate } from 'react-router-dom'
 import {
   MainContainer,
   Logo,
@@ -8,6 +11,7 @@ import {
   InputContainer,
   Label,
   Input,
+  Error,
   Link,
   Button
 } from './styles'
@@ -19,6 +23,7 @@ interface LoginValues {
 
 const validations = Yup.object({ 
   email: Yup.string()
+    .email('Email inválido')
     .required('Por favor, informe o seu email!'),
 
   password: Yup.string()
@@ -27,14 +32,23 @@ const validations = Yup.object({
 })
 
 const Login:React.FC = () => {
+  const navigate = useNavigate()
 
   const initialValues:LoginValues = {
     email: '',
     password: ''
   }
 
-  const handleLogin = (values: LoginValues) => {
-    console.log(values)
+  const handleLogin = async (values: LoginValues) => {
+    try {
+      const useCredential = await signInWithEmailAndPassword(auth, values.email, values.password)
+      console.log('Usuário logado:', useCredential.user)
+      navigate('/')
+
+    } catch (e: any) {
+      console.log('Erro ao fazer login: ', e.message)
+      alert('Erro ao fazer login:' + e.message)  
+    }
   }
   
   return (
@@ -47,7 +61,7 @@ const Login:React.FC = () => {
         onSubmit={(values) => handleLogin(values)}
 
       >
-        {({values, handleChange }) => (
+        {({values, handleChange, touched, errors }) => (
           <Form>
             <FormContainer>
               <InputContainer>
@@ -58,8 +72,8 @@ const Login:React.FC = () => {
                   id="email"
                   onChange={handleChange}
                   value={values.email}
-                  required
                 />
+                {touched.email && errors.email && <Error>{errors.email}</Error>}
               </InputContainer>
               
               <InputContainer>
@@ -70,8 +84,8 @@ const Login:React.FC = () => {
                   id='password'
                   onChange={handleChange}
                   value={values.password}
-                  required
-                />  
+                />
+                {touched.password && errors.password && <Error>{errors.password}</Error>}
               </InputContainer>
               <Link href="#">Esqueci minha senha</Link>
 
