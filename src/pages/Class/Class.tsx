@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { db } from '../../services/firebase';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import ListModal from '../../components/ListModal/ListModal';
 import {
   MainContent,
   Add,
@@ -26,20 +27,42 @@ interface ClassTable {
   qntStudents: string
   shift: string
   status: string
-  studentsId: []
-  teachersId: []
+  students: string[]
+  teachers: string[]
+}
+
+interface PeopleData {
+  id: string;
+  name: string;
 }
 
 interface ClassTableProps {
-  classes: ClassTable[],
-  openMenuIndex: number | null,
-  toggleMenu: (index: number) => void,
-  menuRef: React.RefObject<HTMLDivElement>,
-  navigate: (path: string) => void,
+  classes: ClassTable[]
+  students: PeopleData[]
+  teachers: PeopleData[]
+  openMenuIndex: number | null
+  toggleMenu: (index: number) => void
+  menuRef: React.RefObject<HTMLDivElement>
+  navigate: (path: string) => void
   handleDeleteClass: (classData: ClassTable) => void
+  setModalTitle: (title: string) => void
+  setModalData: (data: string[]) => void
+  setIsModalVisible: (isVisible: boolean) => void
 }
 
-function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate, handleDeleteClass }: ClassTableProps) {
+function ClassTable ({
+  classes,
+  students,
+  teachers,
+  openMenuIndex,
+  toggleMenu,
+  menuRef,
+  navigate,
+  handleDeleteClass,
+  setModalTitle,
+  setModalData,
+  setIsModalVisible
+}: ClassTableProps ) {
   if (classes.length === 0) {
       return <FeedBack>Nenhuma turma ainda.</FeedBack>
     }
@@ -55,37 +78,56 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate, ha
         <TableHeader>Status</TableHeader>
         <TableHeader></TableHeader>
       </TableRow>
-      {classes.map((classData, index) => (
-        <TableRow key={index}>
-          <TableData>{classData.code}</TableData>
-          <TableData>{classData.name}</TableData>
-          <TableData>{classData.room}</TableData>
-          <TableData>{classData.qntStudents}</TableData>
-          <TableData>{classData.shift}</TableData>
-          <TableData>{classData.status}</TableData>
-          <TableData>
-            <OptionsButtonContainer>
-              <OptionsButton
-                onClick={() => toggleMenu(index)}
-              >
-                Opções
-              </OptionsButton>
-              {openMenuIndex === index && (
-                <ToggleMenu ref={menuRef}>
-                  <nav>
-                    <ToggleMenuList>
-                      <ToggleMenuItem onClick={() => navigate(`/classform/${classData.id}`)}>Editar</ToggleMenuItem>
-                      <ToggleMenuItem onClick={() => handleDeleteClass(classData)}>Excluir</ToggleMenuItem>
-                      <ToggleMenuItem>Alunos</ToggleMenuItem>
-                      <ToggleMenuItem>Professores</ToggleMenuItem>
-                    </ToggleMenuList>
-                  </nav>
-                </ToggleMenu>
-              )}
-            </OptionsButtonContainer>
-          </TableData>
-        </TableRow>
-      ))}  
+      {classes.map((classData, index) => {
+
+        const filteredStudents = students
+          .filter((student) => classData.students.includes(student.id))
+          .map((student) => student.name)
+
+        const filteredTeachers = teachers
+          .filter((teacher) => classData.teachers.includes(teacher.id))
+          .map((teacher) => teacher.name);
+
+        return (
+          <TableRow key={index}>
+            <TableData>{classData.code}</TableData>
+            <TableData>{classData.name}</TableData>
+            <TableData>{classData.room}</TableData>
+            <TableData>{classData.qntStudents}</TableData>
+            <TableData>{classData.shift}</TableData>
+            <TableData>{classData.status}</TableData>
+            <TableData>
+              <OptionsButtonContainer>
+                <OptionsButton
+                  onClick={() => toggleMenu(index)}
+                >
+                  Opções
+                </OptionsButton>
+                {openMenuIndex === index && (
+                  <ToggleMenu ref={menuRef}>
+                    <nav>
+                      <ToggleMenuList>
+                        <ToggleMenuItem onClick={() => navigate(`/classform/${classData.id}`)}>Editar</ToggleMenuItem>
+                        <ToggleMenuItem onClick={() => handleDeleteClass(classData)}>Excluir</ToggleMenuItem>
+                        <ToggleMenuItem onClick={() => {
+                          setModalTitle('Alunos')
+                          setModalData(filteredStudents)
+                          setIsModalVisible(true)
+                        }}>Alunos</ToggleMenuItem>
+                        <ToggleMenuItem onClick={() => {
+                          setModalTitle('Professores')
+                          setModalData(filteredTeachers)
+                          setIsModalVisible(true)
+                        }}>Professores</ToggleMenuItem>
+                      </ToggleMenuList>
+                    </nav>
+                  </ToggleMenu>
+                )}
+              </OptionsButtonContainer>
+            </TableData>
+          </TableRow>
+        )
+      })}  
     </Table>
   )
 }
@@ -93,8 +135,13 @@ function ClassTable ({ classes, openMenuIndex, toggleMenu, menuRef, navigate, ha
 const Class: React.FC = () => {
   const navigate = useNavigate()
   const [classes, setClasses] = useState<ClassTable[]>([]);
+  const [students, setStudents] = useState<PeopleData[]>([]);
+  const [teachers, setTeachers] = useState<PeopleData[]>([]);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalData, setModalData] = useState<PeopleData[]>();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
   const toggleMenu = (index: number) => {
     setOpenMenuIndex(openMenuIndex  === index ? null : index);
@@ -130,8 +177,8 @@ const Class: React.FC = () => {
             room: data.room || '',
             shift: data.shift || '',
             status: data.status || '',
-            studentsId: data.studentsId || [],
-            teachersId: data.teachersId || [],
+            students: data.students || [],
+            teachers: data.teachers || [],
           };
         }
         return undefined
@@ -141,6 +188,41 @@ const Class: React.FC = () => {
     };
   
     fetchClasses()
+  }, []);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const studentsCollection = collection(db, 'students');
+      const studentsSnapshot = await getDocs(studentsCollection);
+      const studentsData: PeopleData[] = studentsSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name || '',
+        };
+      });
+      setStudents(studentsData); // Atualiza a lista de alunos
+    };
+  
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      const teachersCollection = collection(db, 'teachers');
+      const teachersSnapshot = await getDocs(teachersCollection);
+      const teachersData: PeopleData[] = teachersSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name || '',
+        };
+      });
+
+      setTeachers(teachersData);
+    };
+  
+    fetchTeachers();
   }, []);
 
   const handleDeleteClass = async (classData: ClassTable) => {
@@ -156,21 +238,31 @@ const Class: React.FC = () => {
         alert("Erro ao excluir turma. Tente novamente.")
       }
     }
-    console.log(classData)
   }
 
   return (
     <>
       <MainContent>
+        <ListModal 
+          title={modalTitle} 
+          data={modalData}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+        />
         <Add onClick={() => navigate('/classform')}>Cadastrar Turma</Add>
         <ContentContainer>
           <ClassTable
             classes={classes}
+            students={students}
+            teachers={teachers}
             openMenuIndex={openMenuIndex}
             toggleMenu={toggleMenu}
             menuRef={menuRef}
             navigate={navigate}
             handleDeleteClass={handleDeleteClass}
+            setModalTitle={setModalTitle}
+            setModalData={setModalData}
+            setIsModalVisible={setIsModalVisible}
           />
         </ContentContainer>
       </MainContent>
