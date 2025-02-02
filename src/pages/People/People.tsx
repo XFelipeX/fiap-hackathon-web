@@ -41,13 +41,15 @@ interface StudentsTable {
 
 interface PersonTableProps {
   people: TeachersTable[] | StudentsTable[],
+  personSelected: string
   openMenuIndex: number | null,
   toggleMenu: (index: number) => void,
   menuRef: React.RefObject<HTMLDivElement>,
   navigate: (path: string) => void,
 }
 
-function PersonTable ({ people, openMenuIndex, toggleMenu, menuRef, navigate }: PersonTableProps) {
+function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuRef, navigate }: PersonTableProps) {
+
   return (
     <Table>
       <TableRow>
@@ -76,7 +78,7 @@ function PersonTable ({ people, openMenuIndex, toggleMenu, menuRef, navigate }: 
                 <ToggleMenu ref={menuRef}>
                   <nav>
                     <ToggleMenuList>
-                      <ToggleMenuItem onClick={() => navigate('')}>Editar</ToggleMenuItem>
+                      <ToggleMenuItem onClick={() => navigate(`/peopleform/${personSelected}/${person.id}`)}>Editar</ToggleMenuItem>
                       <ToggleMenuItem>Excluir</ToggleMenuItem>
                       {(person as TeachersTable).subjects && (
                         <ToggleMenuItem>Matérias</ToggleMenuItem>
@@ -180,22 +182,6 @@ useEffect(() => {
   fetchTeacher()
 }, []);
 
-// const mockStudents = [
-//   { id: '01', code: 'S-001', name: 'Lucas da Silva', birthDay: '01/02/2003', tel: '32998765432', email: 'lucas.silva@email.com' },
-//   { id: '02', code: 'S-002', name: 'Maria Oliveira', birthDay: '06/15/2002', tel: '11987654321', email: 'maria.oliveira@email.com' },
-//   { id: '03', code: 'S-003', name: 'João Souza', birthDay: '09/25/2001', tel: '21976543210', email: 'joao.souza@email.com' },
-//   { id: '04', code: 'S-004', name: 'Ana Pereira', birthDay: '12/30/2000', tel: '31965432109', email: 'ana.pereira@email.com' },
-//   { id: '05', code: 'S-005', name: 'Carlos Mendes', birthDay: '05/07/1999', tel: '41954321098', email: 'carlos.mendes@email.com' }
-// ];
-
-// const mockTeachers = [
-//   { id: '001', code: "TE-001", name: 'Fernanda Costa', birthDay: '10/04/1985', tel: '11987654321', email: 'fernanda@costa.com', subjects: ['Mathematics', 'Physics'] },
-//   { id: '002', code: "TE-002", name: 'Ricardo Lima', birthDay: '22/08/1979', tel: '21976543210', email: 'ricardo@lima.com', subjects: ['History', 'Geography'] },
-//   { id: '003', code: "TE-003", name: 'Juliana Alves', birthDay: '05/03/1990', tel: '31965432109', email: 'juliana@alves.com', subjects: ['Biology', 'Chemistry'] },
-//   { id: '004', code: "TE-004", name: 'Marcos Silva', birthDay: '18/11/1982', tel: '41954321098', email: 'marcos@silva.com', subjects: ['English', 'Literature'] },
-//   { id: '005', code: "TE-005", name: 'Patrícia Mendes', birthDay: '25/07/1987', tel: '32998765432', email: 'patricia@mendes.com', subjects: ['Physical Education'] }
-// ];
-
 return (
   <>
     <MainContent>
@@ -211,11 +197,16 @@ return (
             onClick={() => setPersonSelected('student')}
           >Alunos</StudentButton>
         </div>
-        <Add>Adicionar</Add>
+        <Add
+          onClick={() => navigate(`/peopleform/${personSelected}`)}
+        >
+          {personSelected == 'teacher' ? 'Adicionar professor' : 'Adicionar Aluno'}
+        </Add>
       </Buttons>
       <ContentContainer>
         <PersonTable
           people={personSelected == 'teacher' ? teachers : students}
+          personSelected={personSelected}
           openMenuIndex={openMenuIndex}
           toggleMenu={toggleMenu}
           menuRef={menuRef}
