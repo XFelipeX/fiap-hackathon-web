@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { db } from '../../services/firebase';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import ListModal from '../../components/ListModal/ListModal';
 import {
   MainContent,
   Buttons,
@@ -47,9 +48,44 @@ interface PersonTableProps {
   menuRef: React.RefObject<HTMLDivElement>,
   navigate: (path: string) => void,
   handleDelete: (person: TeachersTable | StudentsTable) => void
+  setModalTitle: (title: string) => void
+  setModalData: (data: string[]) => void
+  setIsModalVisible: (isVisible: boolean) => void
 }
 
-function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuRef, navigate, handleDelete }: PersonTableProps) {
+interface Translations {
+  subjects: { [key: string]: string }
+}
+
+const translations: Translations = {
+  subjects: {
+    portuguese: 'Português',
+    math: 'Matemática',
+    physics: 'Física',
+    chemistry: 'Química',
+    biology: 'Biologia',
+    history: 'História',
+    geography: 'Geografia',
+    philosophy: 'Filosofia',
+    sociology: 'Sociologia',
+    art: 'Arte',
+    physical_education: 'Educação Física',
+    english: 'Inglês',
+  }
+};
+
+function PersonTable ({
+  people,
+  personSelected,
+  openMenuIndex,
+  toggleMenu,
+  menuRef,
+  navigate,
+  handleDelete,
+  setModalTitle,
+  setModalData,
+  setIsModalVisible
+}: PersonTableProps) {
 
   return (
     <Table>
@@ -82,7 +118,11 @@ function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuR
                       <ToggleMenuItem onClick={() => navigate(`/peopleform/${personSelected}/${person.id}`)}>Editar</ToggleMenuItem>
                       <ToggleMenuItem onClick={() => handleDelete(person)}>Excluir</ToggleMenuItem>
                       {(person as TeachersTable).subjects && (
-                        <ToggleMenuItem>Matérias</ToggleMenuItem>
+                        <ToggleMenuItem onClick={() => {
+                          setModalTitle('Matérias')
+                          setModalData((person.subjects as string[]).map((subject: string | number) => translations.subjects[subject]))
+                          setIsModalVisible(true)
+                        }}>Matérias</ToggleMenuItem>
                       )}
                     </ToggleMenuList>
                   </nav>
@@ -113,6 +153,9 @@ const Person: React.FC = () => {
   const [students, setStudents] = useState<StudentsTable[]>([]);
   const [personSelected, setPersonSelected] = useState<'student' | 'teacher'>('teacher');
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalData, setModalData] = useState();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
   const toggleMenu = (index: number) => {
     setOpenMenuIndex(openMenuIndex  === index ? null : index);
@@ -229,6 +272,12 @@ const handleDelete = async (person: TeachersTable | StudentsTable) => {
 return (
   <>
     <MainContent>
+      <ListModal 
+        title={modalTitle} 
+        data={modalData}
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
       <Buttons>
         <div>
           <TeacherButton 
@@ -256,6 +305,9 @@ return (
           menuRef={menuRef}
           navigate={navigate}
           handleDelete={handleDelete}
+          setModalTitle={setModalTitle}
+          setModalData={setModalData}
+          setIsModalVisible={setIsModalVisible}
         />
       </ContentContainer>
     </MainContent>
