@@ -9,6 +9,7 @@ export const MainContainer = styled.div`
   align-items: center;
   min-height: 100vh;
   background-color: ${colors.background};
+  padding-top: 30px;
 `;
 
 export const FormContainer = styled.div`
