@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { db } from '../../services/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import {
   MainContent,
   Buttons,
@@ -46,9 +46,10 @@ interface PersonTableProps {
   toggleMenu: (index: number) => void,
   menuRef: React.RefObject<HTMLDivElement>,
   navigate: (path: string) => void,
+  handleDelete: (person: TeachersTable | StudentsTable) => void
 }
 
-function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuRef, navigate }: PersonTableProps) {
+function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuRef, navigate, handleDelete }: PersonTableProps) {
 
   return (
     <Table>
@@ -79,7 +80,7 @@ function PersonTable ({ people, personSelected, openMenuIndex, toggleMenu, menuR
                   <nav>
                     <ToggleMenuList>
                       <ToggleMenuItem onClick={() => navigate(`/peopleform/${personSelected}/${person.id}`)}>Editar</ToggleMenuItem>
-                      <ToggleMenuItem>Excluir</ToggleMenuItem>
+                      <ToggleMenuItem onClick={() => handleDelete(person)}>Excluir</ToggleMenuItem>
                       {(person as TeachersTable).subjects && (
                         <ToggleMenuItem>Matérias</ToggleMenuItem>
                       )}
@@ -130,7 +131,7 @@ const Person: React.FC = () => {
     }
   }, []);
 
-  const fetchTeacher = async () => {
+  const fetchTeachers = async () => {
     const teachersCollection = collection(db, 'teachers')
     const teachersSnapshot = await getDocs(teachersCollection)
 
@@ -179,8 +180,51 @@ setStudents(studentsData)
 
 useEffect(() => {
   fetchStudents()
-  fetchTeacher()
+  fetchTeachers()
 }, []);
+
+const deleteTeacher = async (person: TeachersTable) => {
+  if (window.confirm(`Tem certeza que deseja excluir o professor ${person.name}`)) {
+    try {
+      const teachersCollection = collection(db, 'teachers')
+      const teacherDoc = doc(teachersCollection, person.id)
+      await deleteDoc(teacherDoc)
+      alert(`${person.name} excluído com sucesso!`)
+      fetchTeachers()
+
+    } catch (e) {
+      console.error("Erro ao excluir professor: ", e)
+      alert("Erro ao excluir professor. Tente novamente.")
+    }
+  }
+  console.log(person)
+}
+
+const deleteStudent = async (person: StudentsTable) => {
+  if (window.confirm(`Tem certeza que deseja excluir o aluno ${person.name}`)) {
+    try {
+      const studentsCollection = collection(db, 'students')
+      const studentDoc = doc(studentsCollection, person.id)
+      await deleteDoc(studentDoc)
+      alert(`${person.name} excluído com sucesso!`)
+      fetchStudents()
+
+    } catch (e) {
+      console.error("Erro ao excluir aluno: ", e)
+      alert("Erro ao excluir aluno. Tente novamente.")
+    }
+  }
+  console.log(person)
+}
+
+const handleDelete = async (person: TeachersTable | StudentsTable) => {
+  if (personSelected === 'teacher') {
+    deleteTeacher(person as TeachersTable)
+
+  } else {
+    deleteStudent(person as StudentsTable)
+  }
+}
 
 return (
   <>
@@ -211,6 +255,7 @@ return (
           toggleMenu={toggleMenu}
           menuRef={menuRef}
           navigate={navigate}
+          handleDelete={handleDelete}
         />
       </ContentContainer>
     </MainContent>

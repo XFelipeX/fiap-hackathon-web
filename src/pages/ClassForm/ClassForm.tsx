@@ -59,7 +59,7 @@ const validations = Yup.object({
   room: Yup.number()
     .required('Campo obrigatório')
     .typeError('Deve ser um número'),
-    qntStudents: Yup.number()
+  qntStudents: Yup.number()
     .required('Campo obrigatório')
     .typeError('Deve ser um número'),
   shift: Yup.string()
@@ -195,7 +195,7 @@ const ClassForm: React.FC = () => {
 
       await updateDoc(counterDoc, { count: newCounter })
 
-      const newCode = `PE-${newCounter.toString().padStart(3, '0')}`
+      const newCode = `T-${newCounter.toString().padStart(3, '0')}`
       const classWithCode = { ...values, code: newCode };
 
       await addDoc(classesCollection, classWithCode)

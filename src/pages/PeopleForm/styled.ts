@@ -40,17 +40,33 @@ export const TextInput = styled.input`
   width: 100%;
 `;
 
-export const SelectInput = styled.select`
-  width: 100%;
-  padding: 10px;
-  border: none;
-  outline: none;
-  border-radius: 4px;
+export const CheckBoxContainer = styled.div`
   background-color: ${colors.secondBackground};
-  padding-right: 300px;
+  border-radius: 4px;
+`;
+
+export const CheckBoxInputContainer = styled.div`
+  display: flex;
+`;
+
+export const CheckBoxInput = styled.input`
+  width: 0px;
+  height: 35px;
+`;
+
+export const CheckBoxInputLabel = styled.label`
+  width: 100%;
   color: ${colors.text};
-  font-size: 12pt;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 5px;
+  background-color: ${colors.thirdBackground};
+
+  ${CheckBoxInput}:checked + & {
+    background-color: ${colors.buttonBackground};
+    border: none;
+  }
 `;
 
 export const Error = styled.div`
