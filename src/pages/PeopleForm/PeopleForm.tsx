@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { db } from '../../services/firebase';
+import { auth, db } from '../../services/firebase';
 import { collection, doc, getDoc, setDoc, updateDoc, addDoc, Timestamp } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {
   MainContainer,
   FormContainer,
@@ -19,9 +20,12 @@ import {
   SubmitButton
 } from './styled'
 
+
 interface TeacherFormValues {
   name: string
   email: string
+  password: string
+  confirmPassword: string
   birthDay: string
   tel: string
   subjects: []
@@ -55,6 +59,12 @@ const validations = (person: string) => Yup.object({
   email: Yup.string()
     .email('Email inválido')
     .required('Campo obrigatório'),
+  password: Yup.string()
+    .min(8, 'A senha deve possuir pelo menos 8 caracteres!')
+    .required('Por favor, informe uma senha!'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'As duas senhas não coincidem')
+    .required('Por favor, confirme a senha!'),
   birthDay: Yup.string()
     .required('Campo obrigatório'),
   tel: Yup.string()
@@ -73,6 +83,8 @@ const PeopleForm: React.FC = () => {
   const [initialValues, setInitialValues] = useState<TeacherFormValues | StudentFormValues>(person === 'teacher' ? {
     name: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     birthDay: '',
     tel: '',
     subjects: []
@@ -124,12 +136,15 @@ const PeopleForm: React.FC = () => {
   }, [person, id])
 
   const createTeacher = async (values) => {
+    const auth = getAuth()
     const teachersCollection = collection(db, 'teachers')
     const counterDoc = doc(teachersCollection, 'counter')
     
     try {
-      const counterSnapshot = await getDoc(counterDoc)
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const newUser = userCredential.user;
 
+      const counterSnapshot = await getDoc(counterDoc)
       let currentCounter = 0;
       if (counterSnapshot.exists()) {
         currentCounter = counterSnapshot.data().count
@@ -142,11 +157,20 @@ const PeopleForm: React.FC = () => {
       await updateDoc(counterDoc, { count: newCounter })
 
       const newCode = `TE-${newCounter.toString().padStart(3, '0')}`
-      const teacherWithCode = { ...values, code: newCode };
 
-      await addDoc(teachersCollection, teacherWithCode)
+      const { password, confirmPassword, ...teacherData } = values;
+      const teacher = {
+        ...teacherData,
+        role: "teacher",
+        uid: newUser.uid,
+        code: newCode
+      };
+
+      await addDoc(teachersCollection, teacher)
+
       console.log('Professor adicionado com sucesso!')
       navigate('/people')
+
     } catch (error) {
       console.error('Erro ao adicionar professor:', error)
     }
@@ -264,6 +288,21 @@ const PeopleForm: React.FC = () => {
                 {touched.email && errors.email && <Error>{errors.email}</Error>}
               </InputContainer>
 
+              {person === 'teacher' && (
+                <>
+                  <InputContainer>
+                    <Label htmlFor="password">Senha</Label>
+                    <TextInput type="password" name="password" id="password" onChange={handleChange} value={values.password} />
+                    {touched.password && errors.password && <Error>{errors.password}</Error>}
+                  </InputContainer>
+
+                  <InputContainer>
+                    <Label htmlFor="confirmPassword">Confirme a senha</Label>
+                    <TextInput type="password" name="confirmPassword" id="confirmPassword" onChange={handleChange} value={values.confirmPassword} />
+                    {touched.confirmPassword && errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
+                  </InputContainer>
+                </>
+              )}
               <InputContainer>
                 <Label htmlFor="birthDay">Data de nascimento</Label>
                 <TextInput type="date" name="birthDay" id="birthDay" onChange={handleChange} value={values.birthDay} />

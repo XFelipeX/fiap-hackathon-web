@@ -15,13 +15,13 @@ const AuthContext = createContext<AuthContextProps>({
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-      setLoading(false)
+      setUser(currentUser);
+      setLoading(false);
     })
     return () => unsubscribe()
   }, [])
