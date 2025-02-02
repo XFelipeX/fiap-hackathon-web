@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors"
+import { Colors } from "../../constants/Colors";
 
-const colors = Colors.dark
+const colors = Colors.dark;
 
 export const MainContainer = styled.div`
   display: flex;
@@ -40,10 +40,6 @@ export const TextInput = styled.input`
   width: 100%;
 `;
 
-export const Error = styled.div`
-  color: ${colors.deleteButtonBackground}
-`;
-
 export const SelectInput = styled.select`
   width: 100%;
   padding: 10px;
@@ -57,69 +53,14 @@ export const SelectInput = styled.select`
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
-export const CheckBoxContainerHeader = styled.div`
-  margin-top: 50px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end
-`;
-
-export const CheckBoxLabel = styled.h1`
-  font-size: 16pt;
-  color: ${colors.text};
-`;
-
-export const SortButton = styled.button`
-  border: none;
-  outline: none;
-  padding: 5px 10px;
-  margin-left: 10px;
-  border-radius: 2px;
-  font-size: 12pt;
-  cursor: pointer;
-  color: ${colors.buttonText};
-  background-color: ${colors.thirdBackground}
-`;
-
-export const CheckBoxContainer = styled.div`
-  background-color: ${colors.secondBackground};
-  border-radius: 4px;
-`;
-
-export const CheckBoxInputContainer = styled.div`
-  display: flex;
-`;
-
-export const CheckBoxInput = styled.input`
-  width: 0px;
-  height: 35px;
-`;
-
-export const CheckBoxInputLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  color: ${colors.text};
-  border-radius: 5px;
-  font-size: 14pt;
-  cursor: pointer;
-  padding: 5px 10px;
-  margin: 10px;
-  background-color: ${colors.thirdBackground};
-
-  ${CheckBoxInput}:checked + & {
-    background-color: ${colors.buttonBackground};
-    border: none;
-  }
-
+export const Error = styled.div`
+  color: ${colors.deleteButtonBackground}
 `;
 
 export const SubmitContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 export const SubmitButton = styled.button`
