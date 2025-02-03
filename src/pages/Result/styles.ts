@@ -13,19 +13,53 @@ export const MainContent = styled.div`
   }
 `;
 
-export const SelectClass = styled.button`
+export const UpperContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+`;
+
+export const FormContainer = styled.div`
+  width: 45%;
+`;
+
+export const InputContainer = styled.div`
+  display: flex;
+`;
+
+export const Label = styled.label`
+  color: ${colors.text};
+  font-size: 15pt;
+  line-height: 50px;
+  padding: 0px 10px;
+  border-right: 1px solid ${colors.text};
   background-color: ${colors.secondBackground};
-  height: fit-content;
+  border-radius: 5px 0px 0px 5px;
+`;
+
+export const SelectInput = styled.select`
+  width: 100%;
+  height: 50px;
+  padding: 10px;
   border: none;
+  border-radius: 0px 5px 5px 0px;
+  outline: none;
+  background-color: ${colors.secondBackground};
+  color: ${colors.text};
+  font-size: 12pt;
+  cursor: pointer;
+`;
+
+export const Add = styled.button`
+  background-color: ${colors.buttonBackground};
+  border: none;
+  height: 50px;
   border-radius: 5px;
   font-size: 15pt;
   padding: 10px 30px;
-  cursor: pointer;
-  margin: 0 0 40px 0;
-`;
-
-export const SelectClassContent = styled.p`
   color: white;
+  cursor: pointer;
 `;
 
 export const ContentContainer = styled.div`
@@ -36,17 +70,10 @@ export const ContentContainer = styled.div`
   overflow: visible;
 `;
 
-export const Add = styled.button`
-  background-color: ${colors.buttonBackground};
-  height: fit-content;
-  border: none;
-  border-radius: 5px;
-  font-size: 15pt;
-  padding: 10px 30px;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 40px;
-  float: inline-end;
+export const FeedBack = styled.h2`
+  color: ${colors.text};
+  text-align: center;
+  padding: 20px;
 `;
 
 export const Table = styled.table`
@@ -88,7 +115,7 @@ export const TableData = styled.td`
   font-weight: normal;
 
   @media (max-width: 1360px) {
-    padding: 20px 10px;
+    padding: 20px 5px;
   }
 `;
 
