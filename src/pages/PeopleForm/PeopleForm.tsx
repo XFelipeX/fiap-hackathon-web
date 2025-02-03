@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { db } from '../../services/firebase';
-import { collection, doc, getDoc, setDoc, updateDoc, addDoc, Timestamp } from "firebase/firestore";
+import { collection, doc, getDoc, Timestamp } from "firebase/firestore";
+import { TeacherFormValues, StudentFormValues } from './types';
+import { useFirestore } from '../../hooks/useFirestore';
 import {
   MainContainer,
   FormContainer,
@@ -18,21 +20,6 @@ import {
   SubmitContainer,
   SubmitButton
 } from './styled'
-
-interface TeacherFormValues {
-  name: string
-  email: string
-  birthDay: string
-  tel: string
-  subjects: []
-}
-
-interface StudentFormValues {
-  name: string
-  email: string
-  birthDay: string
-  tel: string
-}
 
 const subjects = [
   { value: "portuguese", label: "Português" },
@@ -68,7 +55,7 @@ const validations = (person: string) => Yup.object({
 })
 
 const PeopleForm: React.FC = () => {
-  const navigate = useNavigate()
+  const { createDocumentWithCode, updateDocument } = useFirestore()
   const { person, id } = useParams<{ person: string, id: string }>()
   const [initialValues, setInitialValues] = useState<TeacherFormValues | StudentFormValues>(person === 'teacher' ? {
     name: '',
@@ -123,94 +110,6 @@ const PeopleForm: React.FC = () => {
     }
   }, [person, id])
 
-  const createTeacher = async (values) => {
-    const teachersCollection = collection(db, 'teachers')
-    const counterDoc = doc(teachersCollection, 'counter')
-    
-    try {
-      const counterSnapshot = await getDoc(counterDoc)
-
-      let currentCounter = 0;
-      if (counterSnapshot.exists()) {
-        currentCounter = counterSnapshot.data().count
-      } else {
-        await setDoc(counterDoc, { count: 0 })
-        console.log("Documento 'counter' criado com sucesso.")
-      }
-      const newCounter = currentCounter + 1
-
-      await updateDoc(counterDoc, { count: newCounter })
-
-      const newCode = `TE-${newCounter.toString().padStart(3, '0')}`
-      const teacherWithCode = { ...values, code: newCode };
-
-      await addDoc(teachersCollection, teacherWithCode)
-      console.log('Professor adicionado com sucesso!')
-      navigate('/people')
-    } catch (error) {
-      console.error('Erro ao adicionar professor:', error)
-    }
-  }
-
-  const updateTeacher = async (values) => {
-    if (!id) return
-
-    const teachersCollection = collection(db, 'teachers')
-    const teacherDoc = doc(teachersCollection, id)
-    
-    try {
-      await updateDoc(teacherDoc, values)
-      console.log('Professor atualizado com sucesso!')
-      navigate('/people')
-    } catch (e) {
-      console.log('Erro ao atualizar professor: ', e)
-    }
-  }
-
-  const createStudent = async (values) => {
-    const studentsCollection = collection(db, 'students')
-    const counterDoc = doc(studentsCollection, 'counter')
-    
-    try {
-      const counterSnapshot = await getDoc(counterDoc)
-
-      let currentCounter = 0;
-      if (counterSnapshot.exists()) {
-        currentCounter = counterSnapshot.data().count
-      } else {
-        await setDoc(counterDoc, { count: 0 })
-        console.log("Documento 'counter' criado com sucesso.")
-      }
-      const newCounter = currentCounter + 1
-
-      await updateDoc(counterDoc, { count: newCounter })
-
-      const newCode = `S-${newCounter.toString().padStart(3, '0')}`
-      const studentWithCode = { ...values, code: newCode };
-
-      await addDoc(studentsCollection, studentWithCode)
-      console.log('Aluno adicionado com sucesso!')
-      navigate('/people')
-    } catch (error) {
-      console.error('Erro ao adicionar aluno:', error)
-    }
-  }
-
-  const updateStudent = async (values) => {
-    if (!id) return
-
-    const studentsCollection = collection(db, 'students')
-    const studentDoc = doc(studentsCollection, id)
-    
-    try {
-      await updateDoc(studentDoc, values)
-      console.log('Aluno atualizado com sucesso!')
-      navigate('/people')
-    } catch (e) {
-      console.log('Erro ao atualizar aluno: ', e)
-    }
-  }
-
   const handleSave = (values: TeacherFormValues | StudentFormValues) => {
     const dateParts = values.birthDay.split('-');
     const adjustedDate = new Date(
@@ -227,15 +126,15 @@ const PeopleForm: React.FC = () => {
 
     if (id) {
       if (person === 'teacher') {
-        updateTeacher(formattedValues)
+        updateDocument('teachers', formattedValues, id)
       } else {
-        updateStudent(formattedValues)
+        updateDocument('students', formattedValues, id)
       }
     } else {
       if (person === 'teacher') {
-        createTeacher(formattedValues)
+        createDocumentWithCode('teachers', formattedValues, 'TE')
       } else {
-        createStudent(formattedValues)
+        createDocumentWithCode('students', formattedValues, 'S')
       }
     }
   };

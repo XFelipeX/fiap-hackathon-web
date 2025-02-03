@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../services/firebase'
 import * as Yup from 'yup'
 import { useNavigate } from 'react-router-dom'
+import { LoginValues } from './types'
 import {
   MainContainer,
   Logo,
@@ -15,11 +16,6 @@ import {
   Link,
   Button
 } from './styles'
-
-interface LoginValues {
-  email: string
-  password: string
-}
 
 const validations = Yup.object({ 
   email: Yup.string()

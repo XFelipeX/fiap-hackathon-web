@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../../services/firebase';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-
+import { IPlanTable, PlanTableProps, Translations } from './types'
 import {
   MainContent,
   Add,
@@ -15,26 +15,6 @@ import {
   EditButton,
   DeleteButton
 } from './styles'
-
-
-interface PlanTable {
-  id: string
-  code: string
-  name: string
-  subjects: string
-  duration: string
-  academicPeriod: string
-}
-
-interface PlanTableProps {
-  plans: PlanTable[]
-  navigate: (path: string) => void
-}
-
-interface Translations {
-  subjects: { [key: string]: string }
-  period: { [key: string]: string }
-}
 
 function PlanTable ({ plans, navigate }: PlanTableProps) {
   if (plans.length === 0) {
@@ -71,7 +51,7 @@ function PlanTable ({ plans, navigate }: PlanTableProps) {
   )
 }
 
-const handleDelete = async (plan: PlanTable) => {
+const handleDelete = async (plan: IPlanTable) => {
   if (window.confirm(`Tem certeza que deseja excluir o plano ${plan.name}?`)) {
     try {
       const plansCollection = collection(db, 'plans')
@@ -111,14 +91,14 @@ const translations: Translations = {
 
 const Plan: React.FC = () => {
   const navigate = useNavigate()
-  const [plans, setPlans] = useState<PlanTable[]>([])
+  const [plans, setPlans] = useState<IPlanTable[]>([])
 
   useEffect(() => {
     const fetchPlans = async () => {
       const plansCollection = collection(db, 'plans')
       const plansSnapshot = await getDocs(plansCollection)
   
-      const plansData: PlanTable[] = plansSnapshot.docs.map((doc) => {
+      const plansData: IPlanTable[] = plansSnapshot.docs.map((doc) => {
         const data = doc.data();
 
         if (doc.id !== 'counter') {
@@ -138,7 +118,7 @@ const Plan: React.FC = () => {
           };
         }
         return undefined
-      }).filter((plan): plan is PlanTable => plan !== undefined)
+      }).filter((plan): plan is IPlanTable => plan !== undefined)
   
       setPlans(plansData)
     };
@@ -146,7 +126,6 @@ const Plan: React.FC = () => {
     fetchPlans()
   }, []);
 
-  console.log(plans)
   return (
     <>
       <MainContent>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { db } from '../../services/firebase';
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, addDoc } from "firebase/firestore";
-
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { FormValues, Teachers, Students } from './types'
+import { useFirestore } from '../../hooks/useFirestore';
 import {
   MainContainer,
   FormContainer,
@@ -23,35 +24,6 @@ import {
   SubmitContainer,
   SubmitButton,
 } from './styles'
-
-interface FormValues {
-  name: string
-  room: string
-  qntStudents: string
-  shift: string
-  status: string
-  students: string[]
-  teachers: string[]
-}
-
-interface Teachers {
-  id: string
-  code: string
-  name: string
-  birthDay: string
-  tel: string
-  email: string
-  subjects: string[]
-}
-
-interface Students {
-  id: string
-  code: string
-  name: string
-  birthDay: string
-  tel: string
-  email: string
-}
 
 const validations = Yup.object({
   name: Yup.string()
@@ -75,7 +47,7 @@ const validations = Yup.object({
 })
 
 const ClassForm: React.FC = () => {
-  const navigate = useNavigate()
+  const { createDocumentWithCode, updateDocument } = useFirestore()
   const { id } = useParams<{ id: string }>()
   const [teachers, setTeachers] = useState<Teachers[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
@@ -171,57 +143,12 @@ const ClassForm: React.FC = () => {
 
   const handleSave = (values: FormValues) => {
     if (id) {
-      updateClass(values)
+      updateDocument('class', values, id)
     } else {
-      createClass(values)
+      createDocumentWithCode('class', values, 'T')
     }
   };
 
-  const createClass = async (values: FormValues) => {
-    const classesCollection = collection(db, 'class')
-    const counterDoc = doc(classesCollection, 'counter')
-
-    try {
-      const counterSnapshot = await getDoc(counterDoc)
-
-      let currentCounter = 0;
-      if (counterSnapshot.exists()) {
-        currentCounter = counterSnapshot.data().count
-      } else {
-        await setDoc(counterDoc, { count: 0 })
-        console.log("Documento 'counter' criado com sucesso.")
-      }
-      const newCounter = currentCounter + 1
-
-      await updateDoc(counterDoc, { count: newCounter })
-
-      const newCode = `T-${newCounter.toString().padStart(3, '0')}`
-      const classWithCode = { ...values, code: newCode };
-
-      await addDoc(classesCollection, classWithCode)
-      console.log('Turma adicionada com sucesso!')
-      navigate('/class')
-    } catch (error) {
-      console.error('Erro ao adicionar turma:', error)
-    }
-  };
-
-  const updateClass = async (values: FormValues) => {
-    if (!id) return
-
-    const classesCollection = collection(db, 'class')
-    const classDoc = doc(classesCollection, id)
-
-    try {
-      await updateDoc(classDoc, values)
-      console.log('Turma atualizada com sucesso!')
-      navigate('/class')
-    } catch (error) {
-      console.error('Erro ao atualizar turma:', error)
-    }
-    console.log('update', values)
-  };
-  
   return (
     <MainContainer>
       <FormContainer>

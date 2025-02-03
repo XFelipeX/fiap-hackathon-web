@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { db } from '../../services/firebase';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import ListModal from '../../components/ListModal/ListModal';
+import { IClassTable, PeopleData, ClassTableProps } from './types'
 import {
   MainContent,
   Add,
@@ -17,38 +19,6 @@ import {
   ToggleMenuList,
   ToggleMenuItem
 } from './styles'
-import { useNavigate } from 'react-router-dom'
-
-interface ClassTable {
-  id: string
-  code: string
-  name: string
-  room: string
-  qntStudents: string
-  shift: string
-  status: string
-  students: string[]
-  teachers: string[]
-}
-
-interface PeopleData {
-  id: string;
-  name: string;
-}
-
-interface ClassTableProps {
-  classes: ClassTable[]
-  students: PeopleData[]
-  teachers: PeopleData[]
-  openMenuIndex: number | null
-  toggleMenu: (index: number) => void
-  menuRef: React.RefObject<HTMLDivElement>
-  navigate: (path: string) => void
-  handleDeleteClass: (classData: ClassTable) => void
-  setModalTitle: (title: string) => void
-  setModalData: (data: string[]) => void
-  setIsModalVisible: (isVisible: boolean) => void
-}
 
 function ClassTable ({
   classes,
@@ -134,7 +104,7 @@ function ClassTable ({
 
 const Class: React.FC = () => {
   const navigate = useNavigate()
-  const [classes, setClasses] = useState<ClassTable[]>([]);
+  const [classes, setClasses] = useState<IClassTable[]>([]);
   const [students, setStudents] = useState<PeopleData[]>([]);
   const [teachers, setTeachers] = useState<PeopleData[]>([]);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -165,7 +135,7 @@ const Class: React.FC = () => {
       const classesCollection = collection(db, 'class')
       const classesSnapshot = await getDocs(classesCollection)
   
-      const classesData: ClassTable[] = classesSnapshot.docs.map((doc) => {
+      const classesData: IClassTable[] = classesSnapshot.docs.map((doc) => {
         const data = doc.data();
 
         if (doc.id !== 'counter') {  
@@ -182,7 +152,7 @@ const Class: React.FC = () => {
           };
         }
         return undefined
-      }).filter((classData): classData is ClassTable => classData !== undefined)
+      }).filter((classData): classData is IClassTable => classData !== undefined)
   
       setClasses(classesData)
     };
@@ -225,7 +195,7 @@ const Class: React.FC = () => {
     fetchTeachers();
   }, []);
 
-  const handleDeleteClass = async (classData: ClassTable) => {
+  const handleDeleteClass = async (classData: IClassTable) => {
     if (window.confirm(`Tem certeza que deseja excluir a turma ${classData.name}`)) {
       try {
         const classesCollection = collection(db, 'class')
