@@ -171,7 +171,7 @@ const Class: React.FC = () => {
           name: data.name || '',
         };
       });
-      setStudents(studentsData); // Atualiza a lista de alunos
+      setStudents(studentsData);
     };
   
     fetchStudents();

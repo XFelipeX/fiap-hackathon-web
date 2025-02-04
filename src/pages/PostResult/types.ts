@@ -15,3 +15,8 @@ export interface IClass {
   students: string[]
   teachers: string[]
 }
+
+export interface Student {
+  id: string;
+  name: string;
+}

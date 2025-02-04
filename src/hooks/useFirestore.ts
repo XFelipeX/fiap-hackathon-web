@@ -2,8 +2,46 @@ import { useNavigate } from "react-router-dom"
 import { db } from '../services/firebase'
 import { collection, doc, getDoc, setDoc, updateDoc, addDoc } from "firebase/firestore"
 
+interface TaskValues {
+  title: string
+  bimester: number
+  type: string
+  TaskValue: string
+  date: string
+  classId: string
+  grades: string[],
+  studentIds: string[]
+}
+
 export const useFirestore = () => {
   const navigate = useNavigate()
+
+  const createTask = async (collectionName: string, values: TaskValues) => {
+    const studentsGrades = values.grades.map((grade) => parseInt(grade));
+
+    const studentsId = values.studentIds.map((id) => id);
+
+    const taskDocument = {
+      bimester: values.bimester,
+      classId: values.classId,
+      date: new Date(values.date).toISOString(),
+      name: values.title,
+      studentsGrades: studentsGrades,
+      studentsId: studentsId,
+      type: values.type,
+      value: parseInt(values.TaskValue)
+    };
+
+    const tasksCollection = collection(db, collectionName)
+    
+    try {
+      await addDoc(tasksCollection, taskDocument)
+      console.log('Tarefa criada com sucesso!')
+      navigate(-1)
+    } catch (error) {
+      console.error('Erro ao criar tarefa:', error)
+    }
+  }
 
   const createDocumentWithCode = async<T>(collectionName: string, data: T, code: string) => {
     const DataCollection = collection(db, collectionName)
@@ -50,5 +88,5 @@ export const useFirestore = () => {
     }
   }
 
-  return { createDocumentWithCode, updateDocument }
+  return { createDocumentWithCode, updateDocument, createTask }
 }
