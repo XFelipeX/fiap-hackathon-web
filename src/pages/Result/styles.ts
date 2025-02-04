@@ -62,7 +62,12 @@ export const TableRow = styled.tr`
   }
   &:last-child {
     border: none;
-    border-radius: 10px;
+  }
+  &:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: 10px;
   }
 `;
 
@@ -83,7 +88,7 @@ export const TableData = styled.td`
   font-weight: normal;
 
   @media (max-width: 1360px) {
-    padding: 20px;
+    padding: 20px 10px;
   }
 `;
 

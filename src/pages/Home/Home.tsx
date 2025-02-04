@@ -3,6 +3,7 @@ import { db } from '../../services/firebase';
 import { collection, getDoc, doc, onSnapshot  } from 'firebase/firestore';
 import FilePanel from "../../components/FilePanel/FilePanel";
 import AddFileModal from "../../components/AddFileModal/AddFileModal";
+import { LessonItemProps, Lesson } from './types'
 import { bouncy } from 'ldrs'
 bouncy.register()
 import {
@@ -20,24 +21,6 @@ import {
   InfoItem,
   FilesButton
 } from './styles'
- 
-interface LessonItemProps {
-  lessons: Lesson[] | null | undefined;
-  fetchLessons: () => Lesson[] | null | undefined
-}
-
-interface Lesson {
-  id: string
-  timeDate: any
-  teacherId: string
-  teacher: any
-  subject: string
-  classId: string
-  class: any
-  status:  'agendada' | 'concluída' | 'cancelada'
-  files: File[]
-  code: string
-}
 
 const formatDate = (timestamp: {seconds: number; nanoseconds: number}) => {
   const date = new Date(timestamp.seconds * 1000);

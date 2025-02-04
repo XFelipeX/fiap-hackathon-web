@@ -5,6 +5,7 @@ import AddFileModal from '../../components/AddFileModal/AddFileModal';
 import FilePanel from '../../components/FilePanel/FilePanel';
 import { db } from '../../services/firebase';
 import { collection, getDoc, doc, updateDoc, onSnapshot  } from 'firebase/firestore';
+import { Translations, Lesson, FormValues } from './types'
 import {
   Container,
   Title,
@@ -20,33 +21,6 @@ import {
   Error,
   SubmitButton
 } from './styles';
-
-interface Translations {
-  subjects: { [key: string]: string }
-}
-
-interface File {
-  name: string
-  type: string
-  url: string
-}
-
-interface Lesson {
-  id: string
-  timeDate: any
-  teacherId: string
-  teacher: any
-  subject: string
-  classId: string
-  class: any
-  status:  'agendada' | 'concluída' | 'cancelada'
-  files: File[]
-  code: string
-}
-
-interface FormValues {
-  lessonId: string
-}
 
 const validations = Yup.object({
   lessonId: Yup.string().required('Selecione uma Aula')

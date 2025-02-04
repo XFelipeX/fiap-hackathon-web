@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { db } from '../../services/firebase';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import ListModal from '../../components/ListModal/ListModal';
+import { TeachersTable, StudentsTable, PersonTableProps, Translations } from './types'
 import {
   MainContent,
   Buttons,
@@ -19,43 +21,6 @@ import {
   ToggleMenuList,
   ToggleMenuItem
 } from './styles'
-import { useNavigate } from 'react-router-dom'
-
-interface TeachersTable {
-  id: string
-  code: string
-  name: string
-  birthDay: string
-  tel: string
-  email: string
-  subjects: string[]
-}
-
-interface StudentsTable {
-  id: string
-  code: string
-  name: string
-  birthDay: string
-  tel: string
-  email: string
-}
-
-interface PersonTableProps {
-  people: TeachersTable[] | StudentsTable[],
-  personSelected: string
-  openMenuIndex: number | null,
-  toggleMenu: (index: number) => void,
-  menuRef: React.RefObject<HTMLDivElement>,
-  navigate: (path: string) => void,
-  handleDelete: (person: TeachersTable | StudentsTable) => void
-  setModalTitle: (title: string) => void
-  setModalData: (data: string[]) => void
-  setIsModalVisible: (isVisible: boolean) => void
-}
-
-interface Translations {
-  subjects: { [key: string]: string }
-}
 
 const translations: Translations = {
   subjects: {

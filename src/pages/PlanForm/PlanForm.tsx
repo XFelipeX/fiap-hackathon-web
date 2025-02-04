@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup';
 import { db } from '../../services/firebase'
-import { collection, doc, getDoc, setDoc, updateDoc, addDoc } from "firebase/firestore"
-
+import { collection, doc, getDoc } from "firebase/firestore"
+import { useFirestore } from '../../hooks/useFirestore';
+import { FormValues } from './types'
 import {
   MainContainer,
   FormContainer,
@@ -20,13 +21,6 @@ import {
   SubmitButton
 } from './styles'
 
-interface FormValues {
-  name: string
-  subjects: string[]
-  duration: number
-  academicPeriod: string
-}
-
 const validations = Yup.object({
   name: Yup.string()
     .required('Defina um nome para o plano de ensino'),
@@ -39,9 +33,24 @@ const validations = Yup.object({
     .required('Selecione um período letivo')
 })
 
+const subjects = [
+  { value: "portuguese", label: "Português" },
+  { value: "math", label: "Matemática" },
+  { value: "physics", label: "Física" },
+  { value: "chemistry", label: "Química" },
+  { value: "biology", label: "Biologia" },
+  { value: "history", label: "História" },
+  { value: "geography", label: "Geografia" },
+  { value: "philosophy", label: "Filosofia" },
+  { value: "sociology", label: "Sociologia" },
+  { value: "art", label: "Arte" },
+  { value: "physical_education", label: "Educação Física" },
+  { value: "english", label: "Inglês" },
+];
+
 const PlanForm: React.FC = () => {
-  const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
+  const { createDocumentWithCode, updateDocument } = useFirestore();
+  const { id } = useParams<{ id: string }>();
   const [initialValues, setInitialValues] = useState<FormValues>({
     name: '',
     subjects: [],
@@ -67,71 +76,11 @@ const PlanForm: React.FC = () => {
 
   const handleSave = (values: FormValues) => {
     if (id) {
-      updatePlan(values)
+      updateDocument('plans', values, id)
     } else {
-      createPlan(values)
+      createDocumentWithCode('plans', values, 'PE')
     }
   }
-
-  const createPlan = async (plan: FormValues) => {
-    const plansCollection = collection(db, 'plans')
-    const counterDoc = doc(plansCollection, 'counter')
-
-    try {
-      const counterSnapshot = await getDoc(counterDoc)
-  
-      let currentCounter = 0;
-      if (counterSnapshot.exists()) {
-        currentCounter = counterSnapshot.data().count
-      } else {
-  
-        await setDoc(counterDoc, { count: 0 })
-        console.log("Documento 'counter' criado com sucesso.")
-      }
-      const newCounter = currentCounter + 1
-  
-      await updateDoc(counterDoc, { count: newCounter })
-  
-      const newCode = `PE-${newCounter.toString().padStart(3, '0')}`
-      const planWithCode = { ...plan, code: newCode };
-  
-      await addDoc(plansCollection, planWithCode)
-      console.log('Plano adicionado com sucesso!')
-      navigate('/plan')
-    } catch (error) {
-      console.error('Erro ao adicionar plano:', error)
-    }
-  };
-
-  const updatePlan = async (values) => {
-    if (!id) return
-
-    const plansCollection = collection(db, 'plans')
-    const planDoc = doc(plansCollection, id)
-
-    try {
-      await updateDoc(planDoc, values);
-      console.log('Plano atualizado com sucesso!')
-      navigate('/plan')
-    } catch (error) {
-      console.error('Erro ao atualizar plano:', error)
-    }
-  }
-
-  const subjects = [
-    { value: "portuguese", label: "Português" },
-    { value: "math", label: "Matemática" },
-    { value: "physics", label: "Física" },
-    { value: "chemistry", label: "Química" },
-    { value: "biology", label: "Biologia" },
-    { value: "history", label: "História" },
-    { value: "geography", label: "Geografia" },
-    { value: "philosophy", label: "Filosofia" },
-    { value: "sociology", label: "Sociologia" },
-    { value: "art", label: "Arte" },
-    { value: "physical_education", label: "Educação Física" },
-    { value: "english", label: "Inglês" },
-  ];
 
   return (
     <>
