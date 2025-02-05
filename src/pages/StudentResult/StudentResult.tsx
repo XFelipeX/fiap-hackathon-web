@@ -98,7 +98,7 @@ const StudentResult: React.FC = () => {
       return sum + (task.studentsGrades[studentIndex] || 0);
     }, 0);
 
-    const bimesterAverage = bimesterTotal / tasks.length;
+    const bimesterAverage = bimesterTotal;
     
     return (
       <TableResultContainer>
@@ -134,7 +134,7 @@ const StudentResult: React.FC = () => {
     const bimesterAverage = bimesterTasks.reduce((sum, task) => {
       const studentIndex = task.studentsId.findIndex(studentId => studentId === id);
       return sum + (task.studentsGrades[studentIndex] || 0);
-    }, 0) / bimesterTasks.length;
+    }, 0);
     return acc + bimesterAverage;
   }, 0);
 
@@ -153,7 +153,7 @@ const StudentResult: React.FC = () => {
       <HorizontalLine/>
       <StudentInfoContainer>
         <StudentInfo>
-          Media total: <strong>{totalAverage.toFixed(1)}</strong>
+          Total: <strong>{totalAverage.toFixed(1)}</strong>
         </StudentInfo>
         <StudentInfo>
           Estado: {totalAverage >= 60 ? 'Aprovado' : 'Reprovado'}

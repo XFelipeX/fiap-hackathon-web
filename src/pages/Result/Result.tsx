@@ -175,7 +175,7 @@ const Result: React.FC = () => {
 
         const calculateAverage = (grades: number[]) =>
           grades.length > 0
-            ? grades.reduce((acc, grade) => acc + grade, 0) / grades.length
+            ? grades.reduce((acc, grade) => acc + grade, 0)
             : 0;
 
         const grade1Bi = calculateAverage(gradesByBimester[1]);
