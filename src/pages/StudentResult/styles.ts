@@ -13,19 +13,29 @@ export const MainContent = styled.div`
   }
 `;
 
+export const StudentName = styled.h1`
+  color: ${colors.text};
+  tex-align: left;
+  font-weight: normal;
+  margin-bottom: 40px;
+`;
+
+export const ResultsContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 50px;
+  column-gap: 20%;
+  justify-content: center;
+ `;
+
 export const TableResultContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 50px;
+  width: 300px
 `;
 
 export const ContentContainer = styled.div`
   background-color: ${colors.secondBackground};
   border-radius: 10px;
-  width: 40%;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  padding: 10px;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -33,10 +43,10 @@ export const ContentContainer = styled.div`
 `;
 
 export const BimesterTitle = styled.h3`
-  color: white;
-  margin-top: 10px;
-  text-align: center;
-  font-size: 18px;
+  color: ${colors.text};
+  font-weight: normal;
+  margin-bottom: 5px;
+  font-size: 18pt;
 `;
 
 export const Table = styled.table`
@@ -52,27 +62,39 @@ export const TableRow = styled.tr`
   }
   &:last-child {
     border: none;
-    border-radius: 10px;
+  }
+  &:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+  }
+  &:last-child td:last-child {
+    border-bottom-right-radius: 10px;
   }
 `;
 
 export const TableHeader = styled.th`
   color: white;
-  padding: 30px;
+  padding: 20px;
   font-weight: normal;
-
-  @media (max-width: 1360px) {
-    padding: 20px;
-  }
 `;
 
 export const TableData = styled.td`
   color: white;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
   font-weight: normal;
+`;
 
-  @media (max-width: 1360px) {
-    padding: 20px;
-  }
+export const HorizontalLine = styled.hr`
+  margin: 50px 0px;
+  transform: translateX(15px)
+`;
+
+export const StudentInfoContainer = styled.div`
+  transform: translateX(15px)
+`;
+
+export const StudentInfo = styled.div`
+  color: ${colors.text};
+  line-height: 56px;
+  font-size: 20pt;
 `;
