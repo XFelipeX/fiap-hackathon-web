@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContainer = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 95px 20% 50px 20%;
 `;
@@ -17,13 +14,13 @@ export const TopContainer = styled.div`
 `;
 
 export const Title = styled.p`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 16pt;
 `;
 
 export const TestsButton = styled.button`
-  background-color: ${colors.secondBackground};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 16pt;
   border: none;
   border-radius: 5px;
@@ -33,7 +30,7 @@ export const TestsButton = styled.button`
 `;
 
 export const TestsButtonAnchor = styled.a`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 16pt;
   text-decoration: none;
 `;
@@ -43,14 +40,14 @@ export const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   padding: 40px 40px 5px 40px;
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
 
 export const FeedBack = styled.p`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
   margin-bottom: 35px;
 `;
@@ -58,7 +55,7 @@ export const FeedBack = styled.p`
 export const LessonItemContainer = styled.div`
   flex: 1;
   width: 100%;
-  border: 1px solid ${colors.text};
+  border: 1px solid ${({ theme }) => theme.colors.text};
   border-radius: 5px;
   margin-bottom: 40px;
 `;
@@ -72,7 +69,7 @@ export const LessonItemContentContainer = styled.div`
 
 export const TimeDate = styled.p`
   font-weight: bold;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 18px;
 `;
 
@@ -82,15 +79,15 @@ export const Info = styled.div`
 `;
 
 export const InfoItem = styled.p`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const FilesButton = styled.button`
-  background-color: ${colors.buttonBackground};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
   padding: 10px 40px;
-  color: ${colors.buttonText};
+  color: ${({ theme }) => theme.colors.buttonText};
   cursor: pointer;
 `;

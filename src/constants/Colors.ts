@@ -3,7 +3,7 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-export const Colors = {
+const Colors = {
   light: {
     text: '#000000',
     contentPostText: '#515151',
@@ -39,3 +39,5 @@ export const Colors = {
     deleteButtonBackground: '#C22C2C',
   },
 };
+
+export default Colors;

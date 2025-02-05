@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import { Colors } from '../../constants/Colors';
-
-const colors = Colors.dark
 
 export const Overlay = styled.div`
   position: fixed;
@@ -14,7 +11,7 @@ export const Overlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  background: ${colors.thirdBackground};
+  background: ${({ theme }) => theme.colors.thirdBackground};
   border-radius: 10px;
   padding: 24px;
   width: 100%;
@@ -70,15 +67,15 @@ export const OptionButton = styled.button`
   flex: 1;
   padding: 12px;
   border-radius: 5px;
-  border: 1px solid ${colors.text};
+  border: 1px solid ${({ theme }) => theme.colors.text};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
-  background: ${({ active }) => (active ? `${colors.buttonBackground}` : `${colors.secondBackground}`)};
+  background: ${({ theme, active }) => active ? theme.colors.buttonBackground : theme.colors.secondBackground};
   &:hover {
     background: ${({ color }) => color};
   }
@@ -90,7 +87,7 @@ background: #1f2937;
 color: white;
 padding: 12px;
 border-radius: 8px;
-border: 1px solid ${colors.text};
+border: 1px solid ${({ theme }) => theme.colors.text};
 text-align: center;
 cursor: pointer;
 margin-bottom: 16px;
@@ -101,9 +98,9 @@ export const Input = styled.input`
   padding: 12px;
   border-radius: 5px;
   outline: none;
-  background: ${colors.secondBackground};
-  color: ${colors.text};
-  border: 1px solid ${colors.text};
+  background: ${({ theme }) => theme.colors.secondBackground};
+  color: ${({ theme }) => theme.colors.text};
+  border: 1px solid ${({ theme }) => theme.colors.text};
   margin-bottom: 25px;
 `;
 
@@ -118,9 +115,9 @@ export const ButtonSubmit = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-  background: ${colors.buttonBackground};
+  background: ${({ theme }) => theme.colors.buttonBackground};
   &:hover {
-    background: ${colors.buttonBackgroundHover};
+    background: ${({ theme }) => theme.colors.buttonBackgroundHover};
   }
 `;
 
@@ -130,8 +127,8 @@ export const Button = styled.button`
   color: white;
   border: none;
   cursor: pointer;
-  background: ${colors.secondBackground};
+  background: ${({ theme }) => theme.colors.secondBackground};
   &:hover {
-    background: ${colors.background};
+    background: ${({ theme }) => theme.colors.background};
   }
 `;

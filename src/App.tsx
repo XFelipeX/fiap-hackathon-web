@@ -3,8 +3,11 @@ import React from 'react';
 import { db } from './services/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import AppRoutes from './routes/Routes';
+import { ThemeProvider } from 'styled-components';
+import { useTheme } from './contexts/ThemeContext';
 
 function App() {
+  const { colors } = useTheme();
   React.useEffect(() => {
     async function getRoles() {
       try {
@@ -26,7 +29,9 @@ function App() {
 
   return (
     <>
-      <AppRoutes />
+      <ThemeProvider theme={{ colors }}>
+        <AppRoutes />
+      </ThemeProvider>
     </>
   );
 }

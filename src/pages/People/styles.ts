@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContent = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 95px 20% 250px 20%;
 
@@ -19,7 +16,7 @@ export const Buttons = styled.div`
 `;
 
 export const TeacherButton = styled.button<{ selected?: boolean }>`
-  background-color: ${(props) => (props.selected ? colors.buttonBackground : colors.secondBackground)};
+  background-color: ${({ theme, selected }) => selected ? theme.colors.buttonBackground : theme.colors.secondBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
@@ -32,7 +29,7 @@ export const TeacherButton = styled.button<{ selected?: boolean }>`
 `;
 
 export const StudentButton = styled.button<{ selected?: boolean }>`
-  background-color: ${(props) => (props.selected ? colors.buttonBackground : colors.secondBackground)};
+  background-color: ${({ theme, selected }) => selected ? theme.colors.buttonBackground : theme.colors.secondBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
@@ -45,7 +42,7 @@ export const StudentButton = styled.button<{ selected?: boolean }>`
 `;
 
 export const Add = styled.button`
-  background-color: ${colors.buttonBackground};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
@@ -55,12 +52,12 @@ export const Add = styled.button`
   cursor: pointer;
   margin-bottom: 40px;
   &:hover {
-    background-color: ${colors.buttonBackgroundHover}
+    background-color: ${({ theme }) => theme.colors.buttonBackgroundHover}
   }
 `;
 
 export const AddStudent = styled.button`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
@@ -72,7 +69,7 @@ export const AddStudent = styled.button`
 `;
 
 export const ContentContainer = styled.div`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 10px;
   min-width: 450px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -88,7 +85,7 @@ export const Table = styled.table`
 export const TableRow = styled.tr`
   border-bottom: 1px solid white;
   &:nth-child(even) {
-    background-color: ${colors.thirdBackground};
+    background-color: ${({ theme }) => theme.colors.thirdBackground};
   }
   &:last-child {
     border: none;
@@ -127,7 +124,7 @@ export const OptionsButtonContainer = styled.div`
 `;
 
 export const OptionsButton = styled.button`
-  background-color: ${colors.editButtonBackground};
+  background-color: ${({ theme }) => theme.colors.editButtonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;
@@ -142,7 +139,7 @@ export const ToggleMenu = styled.div`
   position: absolute;
   top: 80%;
   left: 25%;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 5px;
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.4);
 `;

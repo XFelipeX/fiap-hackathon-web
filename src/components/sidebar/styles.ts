@@ -1,11 +1,8 @@
 import styled from "styled-components"; 
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const Button = styled.button`
-  background: ${colors.buttonBackground};
-  color: ${colors.buttonText};
+  background: ${({ theme }) => theme.colors.buttonBackground};
+  color: ${({ theme }) => theme.colors.buttonText};
   padding: 10px 20px;
   margin-top:auto;
   margin-bottom: 20px;

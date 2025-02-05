@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContent = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 95px 20% 250px 20%;
 
@@ -14,7 +11,7 @@ export const MainContent = styled.div`
 `;
 
 export const StudentName = styled.h1`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   tex-align: left;
   font-weight: normal;
   margin-bottom: 40px;
@@ -33,7 +30,7 @@ export const TableResultContainer = styled.div`
 `;
 
 export const ContentContainer = styled.div`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 
@@ -43,7 +40,7 @@ export const ContentContainer = styled.div`
 `;
 
 export const BimesterTitle = styled.h3`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-weight: normal;
   margin-bottom: 5px;
   font-size: 18pt;
@@ -58,7 +55,7 @@ export const Table = styled.table`
 export const TableRow = styled.tr`
   border-bottom: 1px solid white;
   &:nth-child(even) {
-    background-color: ${colors.thirdBackground};
+    background-color: ${({ theme }) => theme.colors.thirdBackground};
   }
   &:last-child {
     border: none;
@@ -94,7 +91,7 @@ export const StudentInfoContainer = styled.div`
 `;
 
 export const StudentInfo = styled.div`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   line-height: 56px;
   font-size: 20pt;
 `;

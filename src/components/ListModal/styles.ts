@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import { Colors } from '../../constants/Colors';
-
-const colors = Colors.dark
 
 export const Overlay = styled.div`
   position: fixed;
@@ -14,7 +11,7 @@ export const Overlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  background: ${colors.thirdBackground};
+  background: ${({ theme }) => theme.colors.thirdBackground};
   border-radius: 10px;
   padding: 24px;
   width: 100%;
@@ -27,7 +24,7 @@ export const ModalHeader = styled.div`
 `;
 
 export const Title = styled.h2`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 20px;
 `;
 
@@ -36,6 +33,6 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 5px;
 `;

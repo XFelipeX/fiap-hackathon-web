@@ -1,17 +1,14 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContainer = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 80px 20% 50px 20%;
 `;
 
 export const Logo = styled.h1`
   text-align: center;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   letter-spacing: 4px;
 `;
 
@@ -32,30 +29,30 @@ export const InputContainer = styled.div`
 `;
 
 export const Label = styled.label`
-  color: ${colors.text}
+  color: ${({ theme }) => theme.colors.text}
 `;
 
 export const Input = styled.input`
   outline: none;
   border: none;
-  border-bottom: 1px solid ${colors.text};
-  color: ${colors.text};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 14pt;
   padding: 5px;
   background-color: transparent;
 `;
 
 export const Error = styled.div`
-  color: ${colors.deleteButtonBackground}
+  color: ${({ theme }) => theme.colors.deleteButtonBackground}
 `;
 
 export const Link = styled.a`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const Button = styled.button`
-  background-color: ${colors.buttonBackground};
-  color: ${colors.buttonText};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
+  color: ${({ theme }) => theme.colors.buttonText};
   width: 100%;
   font-size: 14pt;
   padding: 15px 0px;
@@ -64,7 +61,7 @@ export const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   &:hover {
-    background-color: ${colors.buttonBackgroundHover}
+    background-color: ${({ theme }) => theme.colors.buttonBackgroundHover}
   }
 
   @media (max-width: 1366px) {
