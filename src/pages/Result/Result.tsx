@@ -159,7 +159,7 @@ const Result: React.FC = () => {
       .filter((student) => selectedClass.students.includes(student.id))
       .map((student) => {
         const studentTasks = tasks.filter((task) =>
-          task.studentsId.includes(student.id)
+          Array.isArray(task.studentsId) && task.studentsId.includes(student.id)
         );
 
         const gradesByBimester: Record<number, number[]> = { 1: [], 2: [], 3: [], 4: [] };

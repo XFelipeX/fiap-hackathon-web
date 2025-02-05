@@ -28,21 +28,40 @@ export const FormContainer = styled.div`
 export const InputsContainer = styled.div`
 `;
 
+export const TitleInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 75%;
+`;
+
+export const BimesterInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 export const InputContainer = styled.div`
   flex: 4;
   display: flex;
   flex-direction: column;
-  align-items: flex-start
+  align-items: flex-start;
 `;
 
 export const BottomLineForm = styled.div`
   display: flex;
+  gap: 20px;
   margin-bottom: 50px;
 `;
 
 export const Label = styled.label`
   margin-bottom: 5px;
   color: ${colors.text}
+`;
+
+export const TopLineForm = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const TitleInput = styled.input`
@@ -59,8 +78,21 @@ export const TitleInput = styled.input`
   margin-bottom: 20px;
 `;
 
+export const BimesterInput = styled.input`
+  height: 50px;
+  background-color: ${colors.secondBackground};
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  color: ${colors.text};
+  font-size: 12pt;
+  padding: 8px 10px;
+  margin-bottom: 20px;
+`; 
+
 export const TextInput = styled.input`
-  width: 90%;
+  width: 100%;
   height: 50px;
   background-color: ${colors.secondBackground};
   outline: none;
@@ -73,7 +105,7 @@ export const TextInput = styled.input`
 `;
 
 export const SelectInput = styled.select`
-  width: 90%;
+  width: 100%;
   height: 50px;
   padding: 10px;
   border: none;
@@ -144,4 +176,8 @@ export const SubmitButton = styled.button`
   &:hover {
     background-color: ${colors.buttonBackgroundHover}
   }
+`;
+
+export const FeedBack = styled.h1`
+  color: ${colors.text}
 `;
