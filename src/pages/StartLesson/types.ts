@@ -18,3 +18,24 @@ export interface Lesson {
 export interface FormValues {
   lessonId: string
 }
+
+export interface Students {
+  id: string
+  code: string
+  name: string
+  birthDay: string
+  tel: string
+  email: string
+}
+
+export interface IClass {
+  id: string
+  code: string
+  name: string
+  room: string
+  qntStudents: string
+  shift: string
+  status: string
+  students: string[]
+  teachers: string[]
+}
