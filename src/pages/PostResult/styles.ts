@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContent = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 95px 20% 250px 20%;
   text-align: -webkit-center;
@@ -15,7 +12,7 @@ export const MainContent = styled.div`
 `;
 
 export const TableContainer = styled.div`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 10px;
   width: 50%;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -56,7 +53,7 @@ export const BottomLineForm = styled.div`
 
 export const Label = styled.label`
   margin-bottom: 5px;
-  color: ${colors.text}
+  color: ${({ theme }) => theme.colors.text}
 `;
 
 export const TopLineForm = styled.div`
@@ -67,12 +64,12 @@ export const TopLineForm = styled.div`
 export const TitleInput = styled.input`
   width: 100%;
   height: 50px;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   outline: none;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   padding: 8px 10px;
   margin-bottom: 20px;
@@ -80,12 +77,12 @@ export const TitleInput = styled.input`
 
 export const BimesterInput = styled.input`
   height: 50px;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   outline: none;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   padding: 8px 10px;
   margin-bottom: 20px;
@@ -94,12 +91,12 @@ export const BimesterInput = styled.input`
 export const TextInput = styled.input`
   width: 100%;
   height: 50px;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   outline: none;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   padding: 10px;
 `;
@@ -111,8 +108,8 @@ export const SelectInput = styled.select`
   border: none;
   outline: none;
   border-radius: 4px;
-  background-color: ${colors.secondBackground};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 `;
@@ -127,7 +124,7 @@ export const GradeInput = styled.input`
 `;
 
 export const Error = styled.div`
-  color: ${colors.deleteButtonBackground}
+  color: ${({ theme }) => theme.colors.deleteButtonBackground}
 `;
 
 export const Table = styled.table`
@@ -142,7 +139,7 @@ export const TableRow = styled.tr`
   align-items: center;
   padding: 30px;
   &:nth-child(even) {
-    background-color: ${colors.thirdBackground};
+    background-color: ${({ theme }) => theme.colors.thirdBackground};
   }
   &:last-child {
     border: none;
@@ -166,18 +163,18 @@ export const SubmitContainer = styled.div`
 `;
 
 export const SubmitButton = styled.button`
-  background-color: ${colors.buttonBackground};
-  color: ${colors.buttonText};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
+  color: ${({ theme }) => theme.colors.buttonText};
   padding: 10px 50px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16pt;
   &:hover {
-    background-color: ${colors.buttonBackgroundHover}
+    background-color: ${({ theme }) => theme.colors.buttonBackgroundHover}
   }
 `;
 
 export const FeedBack = styled.h1`
-  color: ${colors.text}
+  color: ${({ theme }) => theme.colors.text}
 `;

@@ -1,7 +1,4 @@
 import styled from "styled-components";
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const FilePanelContainer = styled.div<{ isVisible: boolean }>`
   position: fixed;
@@ -9,7 +6,7 @@ export const FilePanelContainer = styled.div<{ isVisible: boolean }>`
   right: 0;
   bottom: 0;
   width: 500px;
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   color: white;
   transform: translateX(${props => (props.isVisible ? '0' : '100%')});
   transition: transform 0.3s ease-in-out;
@@ -37,7 +34,7 @@ export const File = styled.li`
 `;
 
 export const Link = styled.a`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
 `;
 
@@ -54,8 +51,8 @@ export const AddButton = styled.button`
   border-radius: 5px;
   margin-top: 20px;
   padding: 5px 10px;
-  color: ${colors.buttonText};
+  color: ${({ theme }) => theme.colors.buttonText};
   font-size: 12pt;
-  background-color: ${colors.buttonBackground};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
   cursor: pointer;
 `;

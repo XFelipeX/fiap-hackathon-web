@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContent = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 95px 20% 250px 20%;
 
@@ -29,12 +26,12 @@ export const InputContainer = styled.div`
 `;
 
 export const Label = styled.label`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 15pt;
   line-height: 50px;
   padding: 0px 10px;
-  border-right: 1px solid ${colors.text};
-  background-color: ${colors.secondBackground};
+  border-right: 1px solid ${({ theme }) => theme.colors.text};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 5px 0px 0px 5px;
 `;
 
@@ -45,14 +42,14 @@ export const SelectInput = styled.select`
   border: none;
   border-radius: 0px 5px 5px 0px;
   outline: none;
-  background-color: ${colors.secondBackground};
-  color: ${colors.text};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   cursor: pointer;
 `;
 
 export const Add = styled.button`
-  background-color: ${colors.buttonBackground};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
   border: none;
   height: 50px;
   border-radius: 5px;
@@ -63,7 +60,7 @@ export const Add = styled.button`
 `;
 
 export const ContentContainer = styled.div`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   border-radius: 10px;
   min-width: 450px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -71,7 +68,7 @@ export const ContentContainer = styled.div`
 `;
 
 export const FeedBack = styled.h2`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
   padding: 20px;
 `;
@@ -85,7 +82,7 @@ export const Table = styled.table`
 export const TableRow = styled.tr`
   border-bottom: 1px solid white;
   &:nth-child(even) {
-    background-color: ${colors.thirdBackground};
+    background-color: ${({ theme }) => theme.colors.thirdBackground};
   }
   &:last-child {
     border: none;
@@ -124,7 +121,7 @@ export const OptionsButtonContainer = styled.div`
 `;
 
 export const OptionsButton = styled.button`
-  background-color: ${colors.editButtonBackground};
+  background-color: ${({ theme }) => theme.colors.editButtonBackground};
   height: fit-content;
   border: none;
   border-radius: 5px;

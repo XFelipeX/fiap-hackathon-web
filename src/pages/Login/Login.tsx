@@ -16,6 +16,7 @@ import {
   Link,
   Button
 } from './styles'
+import Header from '../../components/Header/Header'
 
 const validations = Yup.object({ 
   email: Yup.string()

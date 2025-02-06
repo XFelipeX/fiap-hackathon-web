@@ -1,7 +1,4 @@
 import styled, { keyframes } from "styled-components";
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 interface GoodLessonProps {
   isVisible: boolean;
@@ -34,7 +31,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   color: #fff;
   padding: 50px 0px 20px 0px;
 `;
@@ -56,7 +53,7 @@ export const MenuItem = styled.div`
 `;
 
 export const Button = styled.button<{ primary?: boolean }>`
-  background-color: ${(props) => (props.primary ? colors.buttonBackground : "#3c3c3c")};
+  background-color: ${({ theme, primary }) => primary ? theme.colors.buttonBackground : "#3c3c3c"};
   color: ${(props) => (props.primary ? "#fff" : "#bdbdbd")};
   border: none;
   border-radius: 4px;
@@ -83,8 +80,8 @@ export const GoodLesson = styled.div<GoodLessonProps>`
   top: 20px;
   left: 50%;
   transform: translate(-50%, 0px);
-  background: ${colors.editButtonBackground};
-  color: ${colors.buttonText};
+  background: ${({ theme }) => theme.colors.editButtonBackground};
+  color: ${({ theme }) => theme.colors.buttonText};
   padding: 15px 20px;
   border-radius: 10px;
   font-size: 18px;
@@ -97,7 +94,7 @@ export const GoodLesson = styled.div<GoodLessonProps>`
 export const GoodLessonText = styled.div`
   text-align: center;
   line-height: 50px;
-  color: ${colors.text}
+  color: ${({ theme }) => theme.colors.text}
 `;
 
 
@@ -134,19 +131,19 @@ export const InputContainer = styled.div`
 `;
 
 export const SelectInput = styled.select`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   outline: none;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 12pt;
   padding: 10px 10px;
   width: 350px;
 `;
 
 export const Error = styled.div`
-  color: ${colors.deleteButtonBackground};
+  color: ${({ theme }) => theme.colors.deleteButtonBackground};
   margin-bottom: -25px;
 `;
 
@@ -154,13 +151,13 @@ export const SubmitButton = styled.button`
   display: block;
   border: none;
   border-radius: 5px;
-  background-color: ${colors.buttonBackground};
-  color: ${colors.buttonText};
+  background-color: ${({ theme }) => theme.colors.buttonBackground};
+  color: ${({ theme }) => theme.colors.buttonText};
   font-size: 16px;
   width: 150px;
   padding: 10px 20px;
   cursor: pointer;
   &:hover {
-    background-color: ${colors.buttonBackgroundHover}
+    background-color: ${({ theme }) => theme.colors.buttonBackgroundHover}
   }
 `;

@@ -1,10 +1,7 @@
 import styled from 'styled-components'
-import { Colors } from "../../constants/Colors";
-
-const colors = Colors.dark;
 
 export const MainContainer = styled.div`
-  background-color: ${colors.background};
+  background-color: ${({ theme }) => theme.colors.background};
   min-height: 100vh;
   padding: 65px 20% 50px 20%;
 
@@ -14,7 +11,7 @@ export const MainContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   font-size: 16pt;
   margin-bottom: 15px;
 `;
@@ -31,25 +28,25 @@ export const TableContainer = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: ${colors.secondBackground};
+    background: ${({ theme }) => theme.colors.secondBackground};
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: ${colors.buttonBackground};
+    background: ${({ theme }) => theme.colors.buttonBackground};
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: ${colors.buttonBackgroundHover};
+    background: ${({ theme }) => theme.colors.buttonBackgroundHover};
   }
 `;
 
 
 export const Table = styled.table`
-  background-color: ${colors.secondBackground};
+  background-color: ${({ theme }) => theme.colors.secondBackground};
   margin-bottom: 20px;
-  color: ${colors.text};
+  color: ${({ theme }) => theme.colors.text};
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
@@ -57,7 +54,7 @@ export const Table = styled.table`
 `;
 
 export const TableRow = styled.tr`
-  border-bottom: 1px solid ${colors.text};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.text};
   text-align: center;
   &:last-child {
     border: none;
@@ -65,13 +62,13 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHeader = styled.th`
-  border-bottom: 1px solid ${colors.text};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.text};
   padding: 8px;
   text-align: center;
 `;
 
 export const TableData = styled.td`
-  border-left: 1px solid ${colors.text};
+  border-left: 1px solid ${({ theme }) => theme.colors.text};
   padding: 0px 45px;
   text-align: center;
 `;
