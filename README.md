@@ -2,7 +2,7 @@
 
 Este é o projeto desenvolvido durante o hackathon do curso de pós-graduação em FullStack Development da FIAP.
 
-Membros do grupo 37:
+Membros do grupo:
 
 - Felipe Dias Amorim Pessoa - RM355212 - felipediasamorimpessoa@gmail.com
 - Sérgio Percevallis Neto - RM354791 - sergioneto261001@gmail.com
