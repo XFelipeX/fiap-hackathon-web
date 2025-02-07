@@ -36,6 +36,7 @@ const formatDate = (timestamp: {seconds: number; nanoseconds: number}) => {
 
 const LessonItem = ({ lessons, fetchLessons }: LessonItemProps) => {
   const [isPanelVisible, setIsPanelVisible] = useState(false)
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null >(null)
   const [isAddFileModalOpen, setIsAddFileModalOpen] = useState(false);
   return (
     <>
@@ -51,7 +52,10 @@ const LessonItem = ({ lessons, fetchLessons }: LessonItemProps) => {
                   <InfoItem>Status: {lesson.status}</InfoItem>
                 </Info>
               </div>
-              <FilesButton onClick={() => setIsPanelVisible(true)}>Arquivos</FilesButton>
+              <FilesButton onClick={() => {
+                setIsPanelVisible(true)
+                setSelectedLesson(lessons?.find((le) => le.id == lesson.id) ?? null)
+              }}>Arquivos</FilesButton>
             </LessonItemContentContainer>
           </LessonItemContainer>
 
@@ -66,7 +70,7 @@ const LessonItem = ({ lessons, fetchLessons }: LessonItemProps) => {
 
           <FilePanel
             isVisible={ isPanelVisible }
-            lesson={ lesson }
+            lesson={ selectedLesson }
             onAdd={() => setIsAddFileModalOpen(true)}
             onClose={() => setIsPanelVisible(false)}
           />
@@ -86,7 +90,7 @@ const Home: React.FC = () => {
         const lessonsData: Lesson[] = await Promise.all(
           snapshot.docs.map(async (document) => {
             const data = document.data();
-            
+
             const teacherDocRef = doc(db, 'teachers', data.teacherId);
             const teacherSnapshot = await getDoc(teacherDocRef);
             const teacherData = teacherSnapshot.data();
@@ -94,7 +98,7 @@ const Home: React.FC = () => {
             const classDocRef = doc(db, 'class', data.classId);
             const classSnapshot = await getDoc(classDocRef);
             const classData = classSnapshot.data();
-            
+
             return {
               id: document.id,
               timeDate: data.timeDate,

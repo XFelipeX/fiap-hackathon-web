@@ -22,7 +22,7 @@ export interface Students {
   id: string
   code: string
   name: string
-  birthDay: string
+  birthDay: any
   tel: string
   email: string
 }

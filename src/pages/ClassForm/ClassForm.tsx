@@ -135,9 +135,13 @@ const ClassForm: React.FC = () => {
   };
   
   const sortByAge = () => {
-    const sorted = [...students].sort((a, b) => 
-      (new Date(a.birthDay).getFullYear() - new Date(b.birthDay).getFullYear())
-    );
+    const sorted = [...students].sort((a, b) => {
+      const birthYearA = a.birthDay.toDate ? a.birthDay.toDate().getFullYear() : new Date(a.birthDay).getFullYear();
+      const birthYearB = b.birthDay.toDate ? b.birthDay.toDate().getFullYear() : new Date(b.birthDay).getFullYear();
+      
+      return birthYearA - birthYearB;
+    });
+  
     setStudents(sorted);
   };
 

@@ -97,7 +97,7 @@ export const TableRow = styled.tr`
 
 export const TableHeader = styled.th`
   color: white;
-  padding: 30px;
+  padding: 25px;
   font-weight: normal;
 
   @media (max-width: 1360px) {
@@ -107,7 +107,7 @@ export const TableHeader = styled.th`
 
 export const TableData = styled.td`
   color: white;
-  padding: 30px;
+  padding: 25px;
   text-align: center;
   font-weight: normal;
 
