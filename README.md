@@ -1,5 +1,13 @@
 ## Documentação Técnica do Projeto - FIAP Hackaton
 
+Este é o projeto desenvolvido durante o hackathon do curso de pós-graduação em FullStack Development da FIAP.
+
+Membros do grupo 37:
+
+- Felipe Dias Amorim Pessoa - RM355212 - felipediasamorimpessoa@gmail.com
+- Sérgio Percevallis Neto - RM354791 - sergioneto261001@gmail.com
+- Thiago Scheffer Fialho - RM353477 - thiago.sch.fialho@gmail.com
+
 ### Introdução
 
 Este documento apresenta uma visão detalhada do projeto desenvolvido no Hackathon da FIAP. A aplicação foi implementada utilizando React com TypeScript. Trata-se de uma interface web projetada para criar um ambiente acadêmico mais automatizado e organizado para professores e professoras do ensino público, incluindo rotas de autenticação e administração.
